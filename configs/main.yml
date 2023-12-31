@@ -1,0 +1,9 @@
+server:
+  port: 8080
+
+cache:
+  ttl: 60s
+
+auth:
+  token_ttl: 900s
+  refresh_token_ttl: 720h
