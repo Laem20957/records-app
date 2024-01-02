@@ -1,15 +1,16 @@
-module golang/CRUD_app/notes-app
+module github.com/Laem20957/records-app
 
 go 1.21.4
 
 require (
+	github.com/bluele/gcache v0.0.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.8.1
 	github.com/golang/mock v1.4.4
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/lib/pq v1.10.6
-	// github.com/rusystem/cache v1.0.2
+	github.com/Laem20957/records-app v1.3.0
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/viper v1.12.0
 	github.com/stretchr/testify v1.8.0
