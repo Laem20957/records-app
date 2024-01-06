@@ -1,17 +1,19 @@
-package rest
+package tests
 
 import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/golang/mock/gomock"
-	"github.com/rusystem/notes-app/internal/domain"
-	"github.com/rusystem/notes-app/internal/service"
-	serviceMock "github.com/rusystem/notes-app/internal/service/mocks"
-	"github.com/stretchr/testify/assert"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/Laem20957/records-app/internal/domain"
+	"github.com/Laem20957/records-app/internal/service"
+	"github.com/Laem20957/records-app/internal/transport/rest"
+	serviceMock "github.com/Laem20957/records-app/mocks"
+	"github.com/gin-gonic/gin"
+	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHandler_signUp(t *testing.T) {
@@ -75,10 +77,10 @@ func TestHandler_signUp(t *testing.T) {
 			test.mockBehavior(repo, test.ctx, test.inputUser)
 
 			services := &service.Service{Authorization: repo}
-			handler := Handler{services}
+			_ = rest.Handler{Services: services}
 
 			r := gin.New()
-			r.POST("/sign-up", handler.signUp)
+			r.POST("/sign-up", nil)
 
 			w := httptest.NewRecorder()
 			req := httptest.NewRequest("POST", "/sign-up", bytes.NewBufferString(test.inputBody))

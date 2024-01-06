@@ -1,21 +1,23 @@
-package rest
+package tests
 
 import (
-	"github.com/rusystem/notes-app/internal/service"
-	"github.com/stretchr/testify/require"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/Laem20957/records-app/internal/service"
+	"github.com/Laem20957/records-app/internal/transport/rest"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewHandler(t *testing.T) {
-	h := NewHandler(&service.Service{})
+	h := rest.NewHandler(&service.Service{})
 
-	require.IsType(t, &Handler{}, h)
+	require.IsType(t, &rest.Handler{}, h)
 }
 
 func TestHandler_InitRoutes(t *testing.T) {
-	h := NewHandler(&service.Service{})
+	h := rest.NewHandler(&service.Service{})
 
 	ts := httptest.NewServer(h.InitRoutes())
 	defer ts.Close()

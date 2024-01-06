@@ -2,14 +2,14 @@
 // Source: service.go
 
 // Package mock_service is a generated GoMock package.
-package mock_service
+package mocks
 
 import (
 	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	domain "github.com/rusystem/notes-app/internal/domain"
+	domain "github.com/Laem20957/records-app/internal/domain"
 )
 
 // MockAuthorization is a mock of Authorization interface.

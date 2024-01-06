@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 	"github.com/jmoiron/sqlx"
-	"github.com/rusystem/notes-app/internal/domain"
-	"github.com/rusystem/notes-app/internal/repository/psql"
+	"github.com/Laem20957/records-app/internal/domain"
+	"github.com/Laem20957/records-app/internal/repository/psql"
 )
 
 type Authorization interface {

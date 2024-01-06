@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
-	"github.com/rusystem/cache"
-	"github.com/rusystem/notes-app/internal/config"
-	"github.com/rusystem/notes-app/internal/domain"
-	"github.com/rusystem/notes-app/internal/repository"
+	"github.com/bluele/gcache"
+	"github.com/Laem20957/records-app/internal/config"
+	"github.com/Laem20957/records-app/internal/domain"
+	"github.com/Laem20957/records-app/internal/repository"
 )
 
 //go:generate mockgen -source=service.go -destination=mocks/mock.go
@@ -31,7 +31,7 @@ type Service struct {
 	Note
 }
 
-func NewService(cfg *config.Config, cache *cache.Cache, repos *repository.Repository) *Service {
+func NewService(cfg *config.Config, cache gcache.Cache, repos *repository.Repository) *Service {
 	return &Service{
 		Authorization: NewAuthService(cfg, repos.Authorization),
 		Note:          NewNoteService(cfg, cache, repos.Note),

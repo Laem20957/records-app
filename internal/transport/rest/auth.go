@@ -2,10 +2,11 @@ package rest
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/rusystem/notes-app/internal/domain"
 	"net/http"
 	"strings"
+
+	"github.com/Laem20957/records-app/internal/domain"
+	"github.com/gin-gonic/gin"
 )
 
 // @Summary SignUp
@@ -27,7 +28,7 @@ func (h *Handler) signUp(c *gin.Context) {
 		return
 	}
 
-	id, err := h.services.Authorization.CreateUser(c, input)
+	id, err := h.Services.Authorization.CreateUser(c, input)
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -57,7 +58,7 @@ func (h *Handler) signIn(c *gin.Context) {
 		return
 	}
 
-	accessToken, refreshToken, err := h.services.Authorization.SignIn(c, input)
+	accessToken, refreshToken, err := h.Services.Authorization.SignIn(c, input)
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -89,7 +90,7 @@ func (h *Handler) refresh(c *gin.Context) {
 	}
 
 	token := strings.ReplaceAll(cookie, "'", "")
-	accessToken, refreshToken, err := h.services.RefreshTokens(c, token)
+	accessToken, refreshToken, err := h.Services.RefreshTokens(c, token)
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

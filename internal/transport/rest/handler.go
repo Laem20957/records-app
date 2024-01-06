@@ -1,17 +1,18 @@
 package rest
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/rusystem/notes-app/internal/service"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
 
-	_ "github.com/rusystem/notes-app/docs"
+	"github.com/Laem20957/records-app/internal/service"
+	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	_ "github.com/Laem20957/records-app/docs"
 )
 
 type Handler struct {
-	services *service.Service
+	Services *service.Service
 }
 
 func NewHandler(service *service.Service) *Handler {

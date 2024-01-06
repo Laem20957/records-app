@@ -2,32 +2,71 @@ package server
 
 import (
 	"context"
-	"fmt"
-	"github.com/rusystem/notes-app/internal/config"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
-type Server struct {
-	httpServer *http.Server
+type HttpServer struct {
+	logger *logrus.Logger
+	server *http.Server
 }
 
-func New(cfg *config.Config, handler http.Handler) *Server {
-	return &Server{
-		httpServer: &http.Server{
-			Addr:           fmt.Sprintf(":%d", cfg.Server.Port),
+func Logger() *logrus.Logger {
+	logger := logrus.New()
+	logger.SetFormatter(&logrus.JSONFormatter{})
+	return logger
+}
+
+func Handler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+}
+
+func HttpServerSettings() *HttpServer {
+	logger := Logger()
+	handler := http.HandlerFunc(Handler)
+
+	return &HttpServer{
+		logger: logger,
+		server: &http.Server{
+			Addr:           ":8080",
 			Handler:        handler,
-			MaxHeaderBytes: 1 << 20, // 1 MB
+			MaxHeaderBytes: 1 << 20,
 			ReadTimeout:    10 * time.Second,
 			WriteTimeout:   10 * time.Second,
 		},
 	}
 }
 
-func (s *Server) Run() error {
-	return s.httpServer.ListenAndServe()
+func (hs *HttpServer) HttpServerStart() {
+	go func() {
+		err := hs.server.ListenAndServe()
+		if err != nil && err != http.ErrServerClosed {
+			hs.logger.Fatal("Ошибка при запуске сервера:", err)
+		}
+	}()
+
+	hs.logger.Info("Сервер запущен")
 }
 
-func (s *Server) Stop(ctx context.Context) error {
-	return s.httpServer.Shutdown(ctx)
+func (hs *HttpServer) HttpServerStop() {
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
+	<-stop
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	err := hs.server.Shutdown(ctx)
+	if err != nil {
+		hs.logger.Fatal("Ошибка при остановке сервера:", err)
+	} else {
+		hs.logger.Info("Остановка сервера...")
+	}
+
+	hs.logger.Info("Сервер остановлен")
 }

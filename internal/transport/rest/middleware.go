@@ -2,10 +2,11 @@ package rest
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
-	"github.com/rusystem/notes-app/internal/domain"
 	"net/http"
 	"strings"
+
+	"github.com/Laem20957/records-app/internal/domain"
+	"github.com/gin-gonic/gin"
 )
 
 const (
@@ -31,7 +32,7 @@ func (h *Handler) userIdentity(c *gin.Context) {
 		return
 	}
 
-	userId, err := h.services.Authorization.ParseToken(headerParts[1])
+	userId, err := h.Services.Authorization.ParseToken(headerParts[1])
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusUnauthorized, "invalid token")
 		return

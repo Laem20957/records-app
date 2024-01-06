@@ -1,9 +1,10 @@
 package config
 
 import (
+	"time"
+
 	"github.com/kelseyhightower/envconfig"
 	"github.com/spf13/viper"
-	"time"
 )
 
 type Config struct {

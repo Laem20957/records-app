@@ -1,10 +1,11 @@
 package rest
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/rusystem/notes-app/internal/domain"
 	"net/http"
 	"strconv"
+
+	"github.com/Laem20957/records-app/internal/domain"
+	"github.com/gin-gonic/gin"
 )
 
 // @Summary Create new note
@@ -33,7 +34,7 @@ func (h *Handler) create(c *gin.Context) {
 		return
 	}
 
-	id, err := h.services.Note.Create(c, userId, input)
+	id, err := h.Services.Note.Create(c, userId, input)
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -57,6 +58,7 @@ func (h *Handler) create(c *gin.Context) {
 // @Failure 500 {object} domain.ErrorResponse
 // @Failure default {object} domain.ErrorResponse
 // @Router /api/note/{id} [get]
+
 func (h *Handler) getById(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -69,7 +71,7 @@ func (h *Handler) getById(c *gin.Context) {
 		domain.NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
 	}
 
-	note, err := h.services.GetByID(c, userId, id)
+	note, err := h.Services.GetByID(c, userId, id)
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -91,13 +93,14 @@ func (h *Handler) getById(c *gin.Context) {
 // @Failure 500 {object} domain.ErrorResponse
 // @Failure default {object} domain.ErrorResponse
 // @Router /api/note [get]
+
 func (h *Handler) getAll(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
 
-	notes, err := h.services.Note.GetAll(c, userId)
+	notes, err := h.Services.Note.GetAll(c, userId)
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -119,6 +122,7 @@ func (h *Handler) getAll(c *gin.Context) {
 // @Failure 500 {object} domain.ErrorResponse
 // @Failure default {object} domain.ErrorResponse
 // @Router /api/note/{id} [delete]
+
 func (h *Handler) delete(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -131,7 +135,7 @@ func (h *Handler) delete(c *gin.Context) {
 		return
 	}
 
-	err = h.services.Delete(c, userId, id)
+	err = h.Services.Delete(c, userId, id)
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
@@ -153,6 +157,7 @@ func (h *Handler) delete(c *gin.Context) {
 // @Failure 500 {object} domain.ErrorResponse
 // @Failure default {object} domain.ErrorResponse
 // @Router /api/note/{id} [put]
+
 func (h *Handler) update(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -172,7 +177,7 @@ func (h *Handler) update(c *gin.Context) {
 		return
 	}
 
-	if err := h.services.Update(c, userId, id, input); err != nil {
+	if err := h.Services.Update(c, userId, id, input); err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}

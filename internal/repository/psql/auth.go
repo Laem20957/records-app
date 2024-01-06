@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/jmoiron/sqlx"
-	"github.com/rusystem/notes-app/internal/domain"
+	"github.com/Laem20957/records-app/internal/domain"
 )
 
 type AuthRepository struct {

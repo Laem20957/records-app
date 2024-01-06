@@ -5,10 +5,10 @@ import (
 	"crypto/sha1"
 	"errors"
 	"fmt"
+	"github.com/Laem20957/records-app/internal/config"
+	"github.com/Laem20957/records-app/internal/domain"
+	"github.com/Laem20957/records-app/internal/repository"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/rusystem/notes-app/internal/config"
-	"github.com/rusystem/notes-app/internal/domain"
-	"github.com/rusystem/notes-app/internal/repository"
 	"math/rand"
 	"time"
 )
