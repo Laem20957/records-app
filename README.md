@@ -1,4 +1,4 @@
-# Rest API for create notes.
+# Rest API for create records.
 ### Before using you need to install:
 1. docker-compose
 2. make
