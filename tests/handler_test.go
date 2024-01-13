@@ -5,27 +5,26 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Laem20957/records-app/internal/service"
+	service "github.com/Laem20957/records-app/internal/services"
 	"github.com/Laem20957/records-app/internal/transport/rest"
 	"github.com/stretchr/testify/require"
 )
 
-func TestNewHandler(t *testing.T) {
-	h := rest.NewHandler(&service.Service{})
-
-	require.IsType(t, &rest.Handler{}, h)
+func TestGetHandler(test *testing.T) {
+	handler := rest.GetHandler(&service.Service{})
+	require.IsType(test, rest.Handler{}, handler)
 }
 
-func TestHandler_InitRoutes(t *testing.T) {
-	h := rest.NewHandler(&service.Service{})
+func TestHandler_InitRoutes(test *testing.T) {
+	handler := rest.GetHandler(&service.Service{})
 
-	ts := httptest.NewServer(h.InitRoutes())
+	ts := httptest.NewServer(handler.InitRoutes())
 	defer ts.Close()
 
 	res, err := http.Get(ts.URL + "/ping")
 	if err != nil {
-		t.Error(err)
+		test.Error(err)
 	}
 
-	require.Equal(t, http.StatusOK, res.StatusCode)
+	require.Equal(test, http.StatusOK, res.StatusCode)
 }

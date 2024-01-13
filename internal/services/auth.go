@@ -5,12 +5,13 @@ import (
 	"crypto/sha1"
 	"errors"
 	"fmt"
-	"github.com/Laem20957/records-app/internal/config"
-	"github.com/Laem20957/records-app/internal/domain"
-	"github.com/Laem20957/records-app/internal/repository"
-	"github.com/dgrijalva/jwt-go"
 	"math/rand"
 	"time"
+
+	config "github.com/Laem20957/records-app/configs"
+	domain "github.com/Laem20957/records-app/internal/domains"
+	repository "github.com/Laem20957/records-app/internal/repositories"
+	"github.com/dgrijalva/jwt-go"
 )
 
 type tokenClaims struct {
@@ -19,21 +20,21 @@ type tokenClaims struct {
 }
 
 type AuthService struct {
-	cfg  *config.Config
-	repo repository.Authorization
+	config *config.Config
+	repo   repository.Authorization
 }
 
-func NewAuthService(cfg *config.Config, repo repository.Authorization) *AuthService {
-	return &AuthService{cfg, repo}
+func GetAuthService(s *config.Config, repo repository.Authorization) *AuthService {
+	return &AuthService{s, repo}
 }
 
 func (s *AuthService) CreateUser(ctx context.Context, user domain.User) (int, error) {
-	user.Password = generatePasswordHash(s.cfg, user.Password)
+	user.Password = generatePasswordHash(s.config, user.Password)
 	return s.repo.CreateUser(ctx, user)
 }
 
 func (s *AuthService) SignIn(ctx context.Context, input domain.SignInInput) (string, string, error) {
-	user, err := s.repo.GetUser(ctx, input.Username, generatePasswordHash(s.cfg, input.Password))
+	user, err := s.repo.GetUser(ctx, input.Username, generatePasswordHash(s.config, input.Password))
 	if err != nil {
 		return "", "", err
 	}
@@ -44,13 +45,13 @@ func (s *AuthService) SignIn(ctx context.Context, input domain.SignInInput) (str
 func (s *AuthService) GenerateTokens(ctx context.Context, userId int) (string, string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(s.cfg.Auth.TokenTTL).Unix(),
+			ExpiresAt: time.Now().Add(s.config.TokenTTL).Unix(),
 			IssuedAt:  time.Now().Unix(),
 		},
 		userId,
 	})
 
-	accessToken, err := token.SignedString([]byte(s.cfg.Key.SigningKey))
+	accessToken, err := token.SignedString([]byte(s.config.SigningKey))
 	if err != nil {
 		return "", "", err
 	}
@@ -63,7 +64,7 @@ func (s *AuthService) GenerateTokens(ctx context.Context, userId int) (string, s
 	if err := s.repo.CreateToken(ctx, domain.RefreshSession{
 		UserID:    userId,
 		Token:     refreshToken,
-		ExpiresAt: time.Now().Add(s.cfg.Auth.RefreshTokenTTL),
+		ExpiresAt: time.Now().Add(s.config.RefreshTokenTTL),
 	}); err != nil {
 		return "", "", err
 	}
@@ -77,7 +78,7 @@ func (s *AuthService) ParseToken(accessToken string) (int, error) {
 			return nil, errors.New("invalid signing method")
 		}
 
-		return []byte(s.cfg.Key.SigningKey), nil
+		return []byte(s.config.SigningKey), nil
 	})
 	if err != nil {
 		return 0, err
@@ -91,11 +92,11 @@ func (s *AuthService) ParseToken(accessToken string) (int, error) {
 	return claims.UserId, nil
 }
 
-func generatePasswordHash(cfg *config.Config, password string) string {
+func generatePasswordHash(s *config.Config, password string) string {
 	hash := sha1.New()
 	hash.Write([]byte(password))
 
-	return fmt.Sprintf("%x", hash.Sum([]byte(cfg.Key.Salt)))
+	return fmt.Sprintf("%x", hash.Sum([]byte(s.Salt)))
 }
 
 func newRefreshToken() (string, error) {

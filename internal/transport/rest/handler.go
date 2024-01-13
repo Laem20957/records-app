@@ -3,10 +3,10 @@ package rest
 import (
 	"net/http"
 
-	"github.com/Laem20957/records-app/internal/service"
+	service "github.com/Laem20957/records-app/internal/services"
 	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
+	files_swagger "github.com/swaggo/files"
+	gin_swagger "github.com/swaggo/gin-swagger"
 
 	_ "github.com/Laem20957/records-app/docs"
 )
@@ -15,7 +15,13 @@ type Handler struct {
 	Services *service.Service
 }
 
-func NewHandler(service *service.Service) *Handler {
+// func (h *Handler) GetHandler() *Handler {
+// 	service_struct := &service.Service{}
+// 	handler_struct := &Handler{Services: service_struct}
+// 	return handler_struct
+// }
+
+func GetHandler(service *service.Service) *Handler {
 	return &Handler{service}
 }
 
@@ -45,8 +51,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	router.GET("/ping", func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")
 	})
-
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
+	router.GET("/swagger/*any", gin_swagger.WrapHandler(files_swagger.Handler))
 	return router
 }

@@ -2,9 +2,10 @@ package repository
 
 import (
 	"context"
+
+	domain "github.com/Laem20957/records-app/internal/domains"
+	"github.com/Laem20957/records-app/internal/repositories/psql"
 	"github.com/jmoiron/sqlx"
-	"github.com/Laem20957/records-app/internal/domain"
-	"github.com/Laem20957/records-app/internal/repository/psql"
 )
 
 type Authorization interface {
@@ -27,9 +28,9 @@ type Repository struct {
 	Note
 }
 
-func NewRepository(db *sqlx.DB) *Repository {
+func GetRepository(db *sqlx.DB) *Repository {
 	return &Repository{
-		Authorization: psql.NewAuthRepository(db),
-		Note:          psql.NewNoteRepository(db),
+		Authorization: psql.GetAuthRepository(db),
+		Note:          psql.GetNoteRepository(db),
 	}
 }

@@ -3,15 +3,16 @@ package psql
 import (
 	"context"
 	"fmt"
+
+	domain "github.com/Laem20957/records-app/internal/domains"
 	"github.com/jmoiron/sqlx"
-	"github.com/Laem20957/records-app/internal/domain"
 )
 
 type AuthRepository struct {
 	db *sqlx.DB
 }
 
-func NewAuthRepository(db *sqlx.DB) *AuthRepository {
+func GetAuthRepository(db *sqlx.DB) *AuthRepository {
 	return &AuthRepository{db: db}
 }
 

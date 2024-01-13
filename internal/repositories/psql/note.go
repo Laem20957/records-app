@@ -3,16 +3,17 @@ package psql
 import (
 	"context"
 	"fmt"
-	"github.com/jmoiron/sqlx"
-	"github.com/Laem20957/records-app/internal/domain"
 	"strings"
+
+	domain "github.com/Laem20957/records-app/internal/domains"
+	"github.com/jmoiron/sqlx"
 )
 
 type NoteRepository struct {
 	db *sqlx.DB
 }
 
-func NewNoteRepository(db *sqlx.DB) *NoteRepository {
+func GetNoteRepository(db *sqlx.DB) *NoteRepository {
 	return &NoteRepository{db: db}
 }
 

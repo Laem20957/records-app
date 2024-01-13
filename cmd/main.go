@@ -1,7 +1,8 @@
 package main
 
 import (
-	"github.com/Laem20957/records-app/internal/server"
+	config "github.com/Laem20957/records-app/configs"
+	server "github.com/Laem20957/records-app/internal/servers"
 
 	_ "github.com/lib/pq"
 )
@@ -56,8 +57,10 @@ func main() {
 	// noteHandler := rest.NewHandler(noteService)
 	// noteRouter := noteHandler.InitRoutes()
 
-	httpServer := server.HttpServerSettings()
-	httpServer.HttpServerStart()
-	httpServer.HttpServerStop()
+	config.InitConfigs()
+
+	httpServer := server.HttpServer{}
+	httpServer.HttpServerSettings().HttpServerStart()
+	httpServer.HttpServerSettings().HttpServerStop()
 
 }

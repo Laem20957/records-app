@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	domain "github.com/Laem20957/records-app/internal/domain"
+	domain "github.com/Laem20957/records-app/internal/domains"
 )
 
 // MockAuthorization is a mock of Authorization interface.

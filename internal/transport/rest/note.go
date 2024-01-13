@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Laem20957/records-app/internal/domain"
+	"github.com/Laem20957/records-app/internal/domains"
 	"github.com/gin-gonic/gin"
 )
 

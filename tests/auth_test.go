@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Laem20957/records-app/internal/domain"
-	"github.com/Laem20957/records-app/internal/service"
+	"github.com/Laem20957/records-app/internal/domains"
+	"github.com/Laem20957/records-app/internal/services"
 	"github.com/Laem20957/records-app/internal/transport/rest"
 	serviceMock "github.com/Laem20957/records-app/mocks"
 	"github.com/gin-gonic/gin"

@@ -2,13 +2,14 @@ package service
 
 import (
 	"context"
+
+	config "github.com/Laem20957/records-app/configs"
+	domain "github.com/Laem20957/records-app/internal/domains"
+	repository "github.com/Laem20957/records-app/internal/repositories"
 	"github.com/bluele/gcache"
-	"github.com/Laem20957/records-app/internal/config"
-	"github.com/Laem20957/records-app/internal/domain"
-	"github.com/Laem20957/records-app/internal/repository"
 )
 
-//go:generate mockgen -source=service.go -destination=mocks/mock.go
+// go:generate mockgen -source=service.go -destination=mocks/mock.go
 
 type Authorization interface {
 	CreateUser(ctx context.Context, user domain.User) (int, error)
@@ -31,9 +32,9 @@ type Service struct {
 	Note
 }
 
-func NewService(cfg *config.Config, cache gcache.Cache, repos *repository.Repository) *Service {
+func GetService(config *config.Config, cache gcache.Cache, repos *repository.Repository) *Service {
 	return &Service{
-		Authorization: NewAuthService(cfg, repos.Authorization),
-		Note:          NewNoteService(cfg, cache, repos.Note),
+		Authorization: GetAuthService(config, repos.Authorization),
+		Note:          GetNoteService(config, cache, repos.Note),
 	}
 }
