@@ -1,4 +1,4 @@
-package service
+package services
 
 import (
 	"context"
@@ -19,22 +19,22 @@ type tokenClaims struct {
 	UserId int `json:"user_id"`
 }
 
-type AuthService struct {
+type ServiceAuth struct {
 	config *config.Config
-	repo   repository.Authorization
+	repo   repository.RepositoryAuthorizationMethods
 }
 
-func GetAuthService(s *config.Config, repo repository.Authorization) *AuthService {
-	return &AuthService{s, repo}
+func ServiceGetAuth(cfg *config.Config, repo repository.RepositoryAuthorizationMethods) *ServiceAuth {
+	return &ServiceAuth{cfg, repo}
 }
 
-func (s *AuthService) CreateUser(ctx context.Context, user domain.User) (int, error) {
+func (s *ServiceAuth) CreateUsers(ctx context.Context, user domain.Users) (int, error) {
 	user.Password = generatePasswordHash(s.config, user.Password)
-	return s.repo.CreateUser(ctx, user)
+	return s.repo.CreateUsers(ctx, user)
 }
 
-func (s *AuthService) SignIn(ctx context.Context, input domain.SignInInput) (string, string, error) {
-	user, err := s.repo.GetUser(ctx, input.Username, generatePasswordHash(s.config, input.Password))
+func (s *ServiceAuth) SignIn(ctx context.Context, input domain.SignInInput) (string, string, error) {
+	user, err := s.repo.GetUsers(ctx, input.Username, generatePasswordHash(s.config, input.Password))
 	if err != nil {
 		return "", "", err
 	}
@@ -42,7 +42,7 @@ func (s *AuthService) SignIn(ctx context.Context, input domain.SignInInput) (str
 	return s.GenerateTokens(ctx, user.Id)
 }
 
-func (s *AuthService) GenerateTokens(ctx context.Context, userId int) (string, string, error) {
+func (s *ServiceAuth) GenerateTokens(ctx context.Context, userId int) (string, string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(s.config.TokenTTL).Unix(),
@@ -72,7 +72,7 @@ func (s *AuthService) GenerateTokens(ctx context.Context, userId int) (string, s
 	return accessToken, refreshToken, nil
 }
 
-func (s *AuthService) ParseToken(accessToken string) (int, error) {
+func (s *ServiceAuth) ParseToken(accessToken string) (int, error) {
 	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid signing method")
@@ -112,7 +112,7 @@ func newRefreshToken() (string, error) {
 	return fmt.Sprintf("%x", b), nil
 }
 
-func (s *AuthService) RefreshTokens(ctx context.Context, refreshToken string) (string, string, error) {
+func (s *ServiceAuth) RefreshTokens(ctx context.Context, refreshToken string) (string, string, error) {
 	session, err := s.repo.GetToken(ctx, refreshToken)
 	if err != nil {
 		return "", "", err

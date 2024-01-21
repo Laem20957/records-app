@@ -1,4 +1,4 @@
-package server
+package servers
 
 import (
 	"context"
@@ -10,8 +10,8 @@ import (
 	"time"
 
 	config "github.com/Laem20957/records-app/configs"
-	"github.com/Laem20957/records-app/internal/common"
 	"github.com/Laem20957/records-app/internal/transport/rest"
+	"github.com/Laem20957/records-app/pkg/logger"
 	"github.com/sirupsen/logrus"
 )
 
@@ -21,19 +21,18 @@ type HttpServer struct {
 	handler *rest.Handler
 }
 
-// func Handler(w http.ResponseWriter, r *http.Request) {
-// 	w.WriteHeader(http.StatusOK)
-// 	w.Write([]byte("Привет, мир!"))
-// }
-
 func (hs *HttpServer) HttpServerSettings() *HttpServer {
 	init_routes := hs.handler.InitRoutes()
-	logger := common.Logger()
+	logger := logger.CreateLogs()
 
 	return &HttpServer{
 		logs: logger,
 		server: &http.Server{
-			Addr:           fmt.Sprintf(":%d", config.InitConfigs().LocalServerPort),
+			Addr: fmt.Sprintf(
+				"%s:%d",
+				config.InitConfigs().LocalServerHost,
+				config.InitConfigs().LocalServerPort,
+			),
 			Handler:        init_routes,
 			MaxHeaderBytes: 1 << 20,
 			ReadTimeout:    10 * time.Second,
@@ -58,10 +57,10 @@ func (hs *HttpServer) HttpServerStop() {
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
 	<-stop
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	context, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	err := hs.server.Shutdown(ctx)
+	err := hs.server.Shutdown(context)
 	if err != nil {
 		hs.logs.Fatal("Error while server stop:", err)
 	} else {

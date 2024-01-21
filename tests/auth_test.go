@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Laem20957/records-app/internal/domains"
-	"github.com/Laem20957/records-app/internal/services"
+	domain "github.com/Laem20957/records-app/internal/domains"
+	service "github.com/Laem20957/records-app/internal/services"
 	"github.com/Laem20957/records-app/internal/transport/rest"
 	serviceMock "github.com/Laem20957/records-app/mocks"
 	"github.com/gin-gonic/gin"
@@ -17,12 +17,12 @@ import (
 )
 
 func TestHandler_signUp(t *testing.T) {
-	type mockBehavior func(r *serviceMock.MockAuthorization, ctx context.Context, user domain.User)
+	type mockBehavior func(r *serviceMock.MockAuthorization, ctx context.Context, user domain.Users)
 
 	tests := []struct {
 		name                 string
 		inputBody            string
-		inputUser            domain.User
+		inputUser            domain.Users
 		mockBehavior         mockBehavior
 		ctx                  context.Context
 		expectedStatusCode   int
@@ -31,13 +31,13 @@ func TestHandler_signUp(t *testing.T) {
 		{
 			name:      "ok",
 			inputBody: `{"id": 0, "username": "username","name": "test name","password": "123456qw"}`,
-			inputUser: domain.User{
+			inputUser: domain.Users{
 				Id:       0,
 				Username: "username",
 				Name:     "test name",
 				Password: "123456qw",
 			},
-			mockBehavior: func(r *serviceMock.MockAuthorization, ctx context.Context, user domain.User) {
+			mockBehavior: func(r *serviceMock.MockAuthorization, ctx context.Context, user domain.Users) {
 				r.EXPECT().CreateUser(ctx, user).Return(1, nil)
 			},
 			ctx:                  context.Background(),
@@ -76,7 +76,7 @@ func TestHandler_signUp(t *testing.T) {
 			repo := serviceMock.NewMockAuthorization(c)
 			test.mockBehavior(repo, test.ctx, test.inputUser)
 
-			services := &service.Service{Authorization: repo}
+			services := &service.ServiceMethods{ServiceAuthorizationMethods: nil}
 			_ = rest.Handler{Services: services}
 
 			r := gin.New()

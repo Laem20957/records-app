@@ -11,12 +11,12 @@ import (
 )
 
 func TestGetHandler(test *testing.T) {
-	handler := rest.GetHandler(&service.Service{})
+	handler := rest.GetHandler(&service.ServiceMethods{})
 	require.IsType(test, rest.Handler{}, handler)
 }
 
 func TestHandler_InitRoutes(test *testing.T) {
-	handler := rest.GetHandler(&service.Service{})
+	handler := rest.GetHandler(&service.ServiceMethods{})
 
 	ts := httptest.NewServer(handler.InitRoutes())
 	defer ts.Close()

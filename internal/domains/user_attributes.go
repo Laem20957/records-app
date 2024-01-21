@@ -1,6 +1,6 @@
-package domain
+package domains
 
-type User struct {
+type Users struct {
 	Id       int    `json:"-" db:"id"`
 	Name     string `json:"name" binding:"required,min=2" example:"Dmitry"`
 	Username string `json:"username" binding:"required,min=2" example:"mdmitry"`

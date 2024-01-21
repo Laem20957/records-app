@@ -5,52 +5,46 @@ import (
 
 	service "github.com/Laem20957/records-app/internal/services"
 	"github.com/gin-gonic/gin"
-	files_swagger "github.com/swaggo/files"
-	gin_swagger "github.com/swaggo/gin-swagger"
+	filesSwagger "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 
 	_ "github.com/Laem20957/records-app/docs"
 )
 
 type Handler struct {
-	Services *service.Service
+	Services *service.ServiceMethods
 }
 
-// func (h *Handler) GetHandler() *Handler {
-// 	service_struct := &service.Service{}
-// 	handler_struct := &Handler{Services: service_struct}
-// 	return handler_struct
-// }
-
-func GetHandler(service *service.Service) *Handler {
+func GetHandler(service *service.ServiceMethods) *Handler {
 	return &Handler{service}
 }
 
-func (h *Handler) InitRoutes() *gin.Engine {
+func (handler *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 	router.Use(gin.Logger())
 
 	auth := router.Group("/auth")
 	{
-		auth.POST("/sign-up", h.signUp)
-		auth.POST("/sign-in", h.signIn)
-		auth.GET("/refresh", h.refresh)
+		auth.POST("/sign-up", handler.signUp)
+		auth.POST("/sign-in", handler.signIn)
+		auth.GET("/refresh", handler.refresh_token)
 	}
 
-	api := router.Group("/api", h.userIdentity)
+	api := router.Group("/api", handler.userIdentity)
 	{
-		note := api.Group("/note")
+		record := api.Group("/record")
 		{
-			note.POST("/", h.create)
-			note.GET("/", h.getAll)
-			note.GET("/:id", h.getById)
-			note.PUT("/:id", h.update)
-			note.DELETE("/:id", h.delete)
+			record.POST("/", handler.create)
+			record.GET("/", handler.getAll)
+			record.GET("/:id", handler.getById)
+			record.PUT("/:id", handler.update)
+			record.DELETE("/:id", handler.delete)
 		}
 	}
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")
 	})
-	router.GET("/swagger/*any", gin_swagger.WrapHandler(files_swagger.Handler))
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(filesSwagger.Handler))
 	return router
 }

@@ -1,18 +1,19 @@
-package config
+package configs
 
 import (
 	"time"
 
-	"github.com/Laem20957/records-app/internal/common"
+	"github.com/Laem20957/records-app/pkg/logger"
 	"github.com/spf13/viper"
 )
 
-var logs = common.Logger()
+var logs = logger.CreateLogs()
 
 type Config struct {
 	TTL             time.Duration `mapstructure:"ttl"`
 	TokenTTL        time.Duration `mapstructure:"token_ttl"`
 	RefreshTokenTTL time.Duration `mapstructure:"refresh_token_ttl"`
+	LocalServerHost string        `mapstructure:"local_server_host"`
 	LocalServerPort int           `mapstructure:"local_server_port"`
 	Salt            string        `mapstructure:"salt"`
 	SigningKey      string        `mapstructure:"sign_key"`
@@ -24,7 +25,7 @@ type Config struct {
 }
 
 func (config *Config) getConfigENV() {
-	viper.AddConfigPath("configs")
+	viper.AddConfigPath("records_app/configs")
 	viper.SetConfigName(".env")
 	viper.SetConfigType("env")
 
@@ -38,7 +39,7 @@ func (config *Config) getConfigENV() {
 }
 
 func (config *Config) getConfigYAML() {
-	viper.AddConfigPath("configs")
+	viper.AddConfigPath("records_app/configs")
 	viper.SetConfigName("env")
 	viper.SetConfigType("yml")
 

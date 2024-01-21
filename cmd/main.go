@@ -7,31 +7,21 @@ import (
 	_ "github.com/lib/pq"
 )
 
-// @title Note app API
-// @version 1.0
-// @description API server for Note app
+// @Title Records-App
+// @Version 1.0
+// @Description Server API
 
-// @contact.name Dmitry Mikhaylov
-// @contact.email ru.system.ru@gmail.com
+// @Contact.name Daniel Kotelnikov
+// @Contact.email danielkotelnikov20@gmail.com
 
-// @host localhost:8080
+// @Host localhost:8080
 // @BasePath /
 
-// @securityDefinitions.apikey ApiKeyAuth
-// @in header
-// @name Authorization
-
-const (
-	CONFIG_DIR  = "configs"
-	CONFIG_FILE = "main"
-)
+// @SecurityDefinitions.apikey ApiKeyAuth
+// @In header
+// @Name Authorization
 
 func main() {
-
-	// cfg, err := config.New(CONFIG_DIR, CONFIG_FILE)
-	// if err != nil {
-	// 	logrus.Fatal(err)
-	// }
 
 	// db, err := database.NewPostgresConnection(database.ConnectionInfo{
 	// 	Host:     cfg.DB.Host,
@@ -54,8 +44,6 @@ func main() {
 	// noteCache := gcache.New(20).LRU().Build()
 	// noteRepo := repository.NewRepository(db)
 	// noteService := service.NewService(cfg, noteCache, noteRepo)
-	// noteHandler := rest.NewHandler(noteService)
-	// noteRouter := noteHandler.InitRoutes()
 
 	config.InitConfigs()
 
