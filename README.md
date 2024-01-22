@@ -1,18 +1,20 @@
 # Rest API for create records.
 ### Before using you need to install:
-1. docker-compose
-2. make
-3. migrate
-4. golang
-5. swagger
+1. Golang
+2. Swagger
+3. Docker-compose
+4. Makefile
+5. Migrations
 ### Installing:
 ```
-git clone https://github.com/rusystem/notes-app.git
+git clone https://github.com/Laem20957/records-app.git
 ```
 ```
-make build && make run
+make build
 ```
-
+```
+make run
+```
 ### If this is the first launch then:
 ```
 make migrate
