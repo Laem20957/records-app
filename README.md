@@ -29,5 +29,5 @@ make migrate
 [put] /api/note/{id} - update note by id.<br />
 [delete] /api/note/{id} - delete note by id.<br />
 
-#### Or after launching the application visit the page localhost:8080/swagger/index.html where all available methods are described.
+#### After launching the application will available on this link - localhost:8080/swagger/index.html
 
