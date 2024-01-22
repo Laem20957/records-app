@@ -2,32 +2,34 @@ package rest
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/rusystem/notes-app/internal/domain"
 	"net/http"
 	"strings"
+
+	domain "github.com/Laem20957/records-app/internal/domains"
+	"github.com/gin-gonic/gin"
 )
 
 // @Summary SignUp
-// @Tags auth
+// @Tags Auth
 // @Description Create new account
 // @ID Create-account
 // @Accept json
-// @Produce json
-// @Param input body domain.User true "account info"
+// @Produce son
+// @Param Input body domain.User true "account info"
 // @Success 200 {integer} integer 1
 // @Failure 400,404 {object} domain.ErrorResponse
 // @Failure 500 {object} domain.ErrorResponse
 // @Failure default {object} domain.ErrorResponse
 // @Router /auth/sign-up [post]
+
 func (h *Handler) signUp(c *gin.Context) {
-	var input domain.User
+	var input domain.Users
 	if err := c.BindJSON(&input); err != nil {
 		domain.NewErrorResponse(c, http.StatusBadRequest, "invalid input body")
 		return
 	}
 
-	id, err := h.services.Authorization.CreateUser(c, input)
+	id, err := h.Services.ServiceAuthorizationMethods.CreateUsers(c, input)
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -38,18 +40,6 @@ func (h *Handler) signUp(c *gin.Context) {
 	})
 }
 
-// @Summary SignIn
-// @Tags auth
-// @Description login
-// @ID login
-// @Accept json
-// @Produce json
-// @Param input body domain.SignInInput true "credentials"
-// @Success 200 {string} string "token"
-// @Failure 400,404 {object} domain.ErrorResponse
-// @Failure 500 {object} domain.ErrorResponse
-// @Failure default {object} domain.ErrorResponse
-// @Router /auth/sign-in [post]
 func (h *Handler) signIn(c *gin.Context) {
 	var input domain.SignInInput
 	if err := c.BindJSON(&input); err != nil {
@@ -57,7 +47,7 @@ func (h *Handler) signIn(c *gin.Context) {
 		return
 	}
 
-	accessToken, refreshToken, err := h.services.Authorization.SignIn(c, input)
+	accessToken, refreshToken, err := h.Services.ServiceAuthorizationMethods.SignIn(c, input)
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -70,18 +60,7 @@ func (h *Handler) signIn(c *gin.Context) {
 	})
 }
 
-// @Summary Refresh
-// @Tags auth
-// @Description refresh tokens
-// @ID refresh-tokens
-// @Accept json
-// @Produce json
-// @Success 200 {string} string "token"
-// @Failure 400,404 {object} domain.ErrorResponse
-// @Failure 500 {object} domain.ErrorResponse
-// @Failure default {object} domain.ErrorResponse
-// @Router /auth/refresh [get]
-func (h *Handler) refresh(c *gin.Context) {
+func (h *Handler) refresh_token(c *gin.Context) {
 	cookie, err := c.Cookie("refresh-token")
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusBadRequest, err.Error())
@@ -89,7 +68,7 @@ func (h *Handler) refresh(c *gin.Context) {
 	}
 
 	token := strings.ReplaceAll(cookie, "'", "")
-	accessToken, refreshToken, err := h.services.RefreshTokens(c, token)
+	accessToken, refreshToken, err := h.Services.RefreshTokens(c, token)
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

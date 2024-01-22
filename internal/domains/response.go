@@ -1,4 +1,4 @@
-package domain
+package domains
 
 import (
 	"github.com/gin-gonic/gin"
@@ -18,6 +18,6 @@ func NewErrorResponse(c *gin.Context, statusCode int, message string) {
 	c.AbortWithStatusJSON(statusCode, ErrorResponse{Message: message})
 }
 
-type GetAllNoteResponse struct {
-	Data []Note `json:"data"`
+type GetAllRecordResponse struct {
+	Data []Record `json:"data"`
 }

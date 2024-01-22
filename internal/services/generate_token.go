@@ -1,16 +1,17 @@
-package service
+package services
 
 import (
 	"context"
 	"crypto/sha1"
 	"errors"
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/rusystem/notes-app/internal/config"
-	"github.com/rusystem/notes-app/internal/domain"
-	"github.com/rusystem/notes-app/internal/repository"
 	"math/rand"
 	"time"
+
+	config "github.com/Laem20957/records-app/configs"
+	domain "github.com/Laem20957/records-app/internal/domains"
+	repository "github.com/Laem20957/records-app/internal/repositories"
+	"github.com/dgrijalva/jwt-go"
 )
 
 type tokenClaims struct {
@@ -18,22 +19,22 @@ type tokenClaims struct {
 	UserId int `json:"user_id"`
 }
 
-type AuthService struct {
-	cfg  *config.Config
-	repo repository.Authorization
+type ServiceAuth struct {
+	config *config.Config
+	repo   repository.RepositoryAuthorizationMethods
 }
 
-func NewAuthService(cfg *config.Config, repo repository.Authorization) *AuthService {
-	return &AuthService{cfg, repo}
+func ServiceGetAuth(cfg *config.Config, repo repository.RepositoryAuthorizationMethods) *ServiceAuth {
+	return &ServiceAuth{cfg, repo}
 }
 
-func (s *AuthService) CreateUser(ctx context.Context, user domain.User) (int, error) {
-	user.Password = generatePasswordHash(s.cfg, user.Password)
-	return s.repo.CreateUser(ctx, user)
+func (s *ServiceAuth) CreateUsers(ctx context.Context, user domain.Users) (int, error) {
+	user.Password = generatePasswordHash(s.config, user.Password)
+	return s.repo.CreateUsers(ctx, user)
 }
 
-func (s *AuthService) SignIn(ctx context.Context, input domain.SignInInput) (string, string, error) {
-	user, err := s.repo.GetUser(ctx, input.Username, generatePasswordHash(s.cfg, input.Password))
+func (s *ServiceAuth) SignIn(ctx context.Context, input domain.SignInInput) (string, string, error) {
+	user, err := s.repo.GetUsers(ctx, input.Username, generatePasswordHash(s.config, input.Password))
 	if err != nil {
 		return "", "", err
 	}
@@ -41,16 +42,16 @@ func (s *AuthService) SignIn(ctx context.Context, input domain.SignInInput) (str
 	return s.GenerateTokens(ctx, user.Id)
 }
 
-func (s *AuthService) GenerateTokens(ctx context.Context, userId int) (string, string, error) {
+func (s *ServiceAuth) GenerateTokens(ctx context.Context, userId int) (string, string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(s.cfg.Auth.TokenTTL).Unix(),
+			ExpiresAt: time.Now().Add(s.config.TokenTTL).Unix(),
 			IssuedAt:  time.Now().Unix(),
 		},
 		userId,
 	})
 
-	accessToken, err := token.SignedString([]byte(s.cfg.Key.SigningKey))
+	accessToken, err := token.SignedString([]byte(s.config.SigningKey))
 	if err != nil {
 		return "", "", err
 	}
@@ -63,7 +64,7 @@ func (s *AuthService) GenerateTokens(ctx context.Context, userId int) (string, s
 	if err := s.repo.CreateToken(ctx, domain.RefreshSession{
 		UserID:    userId,
 		Token:     refreshToken,
-		ExpiresAt: time.Now().Add(s.cfg.Auth.RefreshTokenTTL),
+		ExpiresAt: time.Now().Add(s.config.RefreshTokenTTL),
 	}); err != nil {
 		return "", "", err
 	}
@@ -71,13 +72,13 @@ func (s *AuthService) GenerateTokens(ctx context.Context, userId int) (string, s
 	return accessToken, refreshToken, nil
 }
 
-func (s *AuthService) ParseToken(accessToken string) (int, error) {
+func (s *ServiceAuth) ParseToken(accessToken string) (int, error) {
 	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid signing method")
 		}
 
-		return []byte(s.cfg.Key.SigningKey), nil
+		return []byte(s.config.SigningKey), nil
 	})
 	if err != nil {
 		return 0, err
@@ -91,11 +92,11 @@ func (s *AuthService) ParseToken(accessToken string) (int, error) {
 	return claims.UserId, nil
 }
 
-func generatePasswordHash(cfg *config.Config, password string) string {
+func generatePasswordHash(s *config.Config, password string) string {
 	hash := sha1.New()
 	hash.Write([]byte(password))
 
-	return fmt.Sprintf("%x", hash.Sum([]byte(cfg.Key.Salt)))
+	return fmt.Sprintf("%x", hash.Sum([]byte(s.Salt)))
 }
 
 func newRefreshToken() (string, error) {
@@ -111,7 +112,7 @@ func newRefreshToken() (string, error) {
 	return fmt.Sprintf("%x", b), nil
 }
 
-func (s *AuthService) RefreshTokens(ctx context.Context, refreshToken string) (string, string, error) {
+func (s *ServiceAuth) RefreshTokens(ctx context.Context, refreshToken string) (string, string, error) {
 	session, err := s.repo.GetToken(ctx, refreshToken)
 	if err != nil {
 		return "", "", err

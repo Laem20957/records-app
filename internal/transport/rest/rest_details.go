@@ -1,17 +1,18 @@
 package rest
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/rusystem/notes-app/internal/domain"
 	"net/http"
 	"strconv"
+
+	domain "github.com/Laem20957/records-app/internal/domains"
+	"github.com/gin-gonic/gin"
 )
 
-// @Summary Create new note
+// @Summary Create new record
 // @Security ApiKeyAuth
-// @Tags note
-// @Description Create note
-// @ID Create-note
+// @Tags record
+// @Description Create record
+// @ID Create-record
 // @Accept json
 // @Produce json
 // @Param input body domain.UpdateNote true "note info"
@@ -20,6 +21,7 @@ import (
 // @Failure 500 {object} domain.ErrorResponse
 // @Failure default {object} domain.ErrorResponse
 // @Router /api/note [post]
+
 func (h *Handler) create(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -27,13 +29,13 @@ func (h *Handler) create(c *gin.Context) {
 		return
 	}
 
-	var input domain.Note
+	var input domain.Record
 	if err := c.BindJSON(&input); err != nil {
 		domain.NewErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	id, err := h.services.Note.Create(c, userId, input)
+	id, err := h.Services.ServiceRecordMethods.CreateRecords(c, userId, input)
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -44,19 +46,6 @@ func (h *Handler) create(c *gin.Context) {
 	})
 }
 
-// @Summary Get note by id
-// @Security ApiKeyAuth
-// @Tags note
-// @Description Get note by id
-// @ID Get-note-by-id
-// @Accept json
-// @Produce json
-// @Param id path integer true "Note ID"
-// @Success 200 {object} domain.Note
-// @Failure 400,404 {object} domain.ErrorResponse
-// @Failure 500 {object} domain.ErrorResponse
-// @Failure default {object} domain.ErrorResponse
-// @Router /api/note/{id} [get]
 func (h *Handler) getById(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -69,7 +58,7 @@ func (h *Handler) getById(c *gin.Context) {
 		domain.NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
 	}
 
-	note, err := h.services.GetByID(c, userId, id)
+	note, err := h.Services.GetByIDRecords(c, userId, id)
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -79,46 +68,21 @@ func (h *Handler) getById(c *gin.Context) {
 
 }
 
-// @Summary Get all notes
-// @Security ApiKeyAuth
-// @Tags note
-// @Description Get all notes
-// @ID Get-all-notes
-// @Accept json
-// @Produce json
-// @Success 200 {object} domain.GetAllNoteResponse
-// @Failure 400,404 {object} domain.ErrorResponse
-// @Failure 500 {object} domain.ErrorResponse
-// @Failure default {object} domain.ErrorResponse
-// @Router /api/note [get]
 func (h *Handler) getAll(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
 
-	notes, err := h.services.Note.GetAll(c, userId)
+	notes, err := h.Services.ServiceRecordMethods.GetAllRecords(c, userId)
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, domain.GetAllNoteResponse{Data: notes})
+	c.JSON(http.StatusOK, domain.GetAllRecordResponse{Data: notes})
 }
 
-// @Summary Delete note by id
-// @Security ApiKeyAuth
-// @Tags note
-// @Description Delete note by id
-// @ID Delete-note-by-id
-// @Accept json
-// @Produce json
-// @Param id path integer true "Note ID"
-// @Success 200 {integer} integer 1
-// @Failure 400,404 {object} domain.ErrorResponse
-// @Failure 500 {object} domain.ErrorResponse
-// @Failure default {object} domain.ErrorResponse
-// @Router /api/note/{id} [delete]
 func (h *Handler) delete(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -131,7 +95,7 @@ func (h *Handler) delete(c *gin.Context) {
 		return
 	}
 
-	err = h.services.Delete(c, userId, id)
+	err = h.Services.DeleteRecords(c, userId, id)
 	if err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 	}
@@ -139,20 +103,6 @@ func (h *Handler) delete(c *gin.Context) {
 	c.JSON(http.StatusOK, domain.StatusResponse{Status: "ok"})
 }
 
-// @Summary Update note by id
-// @Security ApiKeyAuth
-// @Tags note
-// @Description Update note by id
-// @ID Update-note-by-id
-// @Accept json
-// @Produce json
-// @Param id path integer true "Note ID"
-// @Param input body domain.UpdateNote true "note info"
-// @Success 200 {integer} integer 1
-// @Failure 400,404 {object} domain.ErrorResponse
-// @Failure 500 {object} domain.ErrorResponse
-// @Failure default {object} domain.ErrorResponse
-// @Router /api/note/{id} [put]
 func (h *Handler) update(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -166,13 +116,13 @@ func (h *Handler) update(c *gin.Context) {
 		return
 	}
 
-	var input domain.UpdateNote
+	var input domain.UpdateRecord
 	if err := c.BindJSON(&input); err != nil {
 		domain.NewErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	if err := h.services.Update(c, userId, id, input); err != nil {
+	if err := h.Services.UpdateRecords(c, userId, id, input); err != nil {
 		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}

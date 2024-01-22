@@ -1,24 +1,11 @@
-# Rest API for create notes.
+# The application let create records using REST API
 ### Before using you need to install:
-1. docker-compose
-2. make
-3. migrate
-4. golang
-5. swagger
-### Installing:
-```
-git clone https://github.com/rusystem/notes-app.git
-```
-```
-make build && make run
-```
-
-### If this is the first launch then:
-```
-make migrate
-```
-
-### This Rest API contains the following methods:
+1. Golang
+2. Swagger
+3. Docker-compose
+4. Makefile
+5. Migrations
+### This App contains the following methods:
 [post] /auth/sign-up - to create new user.<br />
 [post] /auth/sign-in - user authentication.<br />
 [get] /api/note - get all notes.<br />
@@ -26,6 +13,18 @@ make migrate
 [get] /api/note/{id} - get note by id.<br />
 [put] /api/note/{id} - update note by id.<br />
 [delete] /api/note/{id} - delete note by id.<br />
-
-#### Or after launching the application visit the page localhost:8080/swagger/index.html where all available methods are described.
+### Installing:
+```
+git clone https://github.com/Laem20957/records-app.git
+```
+```
+make migrate
+```
+```
+make build
+```
+```
+make run
+```
+### After launching the application will available on this link - localhost:8080/swagger/index.html
 
