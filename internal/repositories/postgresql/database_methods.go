@@ -17,7 +17,7 @@ func RepositoryGetRecord(dblib *sqlx.DB) *PSQL {
 	return &PSQL{dblib: dblib}
 }
 
-func (psql *PSQL) CreateRecords(ctx context.Context, userId int, record domain.Record) (int, error) {
+func (psql *PSQL) CreateRecordsDB(ctx context.Context, userId int, record domain.Record) (int, error) {
 	var id int
 
 	createRecordQuery := fmt.Sprintf("INSERT INTO %s (uid, title, description) VALUES ($1, $2, $3) RETURNING id",
@@ -28,7 +28,7 @@ func (psql *PSQL) CreateRecords(ctx context.Context, userId int, record domain.R
 	return id, err
 }
 
-func (psql *PSQL) GetByIDRecords(ctx context.Context, userId, id int) (domain.Record, error) {
+func (psql *PSQL) GetByIDRecordsDB(ctx context.Context, userId, id int) (domain.Record, error) {
 	var record domain.Record
 
 	query := fmt.Sprintf("SELECT id, title, description FROM %s WHERE uid = $1 AND id = $2",
@@ -38,7 +38,7 @@ func (psql *PSQL) GetByIDRecords(ctx context.Context, userId, id int) (domain.Re
 	return record, err
 }
 
-func (psql *PSQL) GetAllRecords(ctx context.Context, userId int) ([]domain.Record, error) {
+func (psql *PSQL) GetAllRecordsDB(ctx context.Context, userId int) ([]domain.Record, error) {
 	var records []domain.Record
 
 	query := fmt.Sprintf("SELECT id, title, description FROM %s WHERE uid = $1",
@@ -48,7 +48,7 @@ func (psql *PSQL) GetAllRecords(ctx context.Context, userId int) ([]domain.Recor
 	return records, err
 }
 
-func (psql *PSQL) DeleteRecords(ctx context.Context, userId, id int) error {
+func (psql *PSQL) DeleteRecordsDB(ctx context.Context, userId, id int) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE uid = $1 AND id = $2",
 		recordsTable)
 
@@ -57,7 +57,7 @@ func (psql *PSQL) DeleteRecords(ctx context.Context, userId, id int) error {
 	return err
 }
 
-func (psql *PSQL) UpdateRecords(ctx context.Context, userId, id int, record domain.UpdateRecord) error {
+func (psql *PSQL) UpdateRecordsDB(ctx context.Context, userId, id int, record domain.UpdateRecord) error {
 	setValues := make([]string, 0)
 	args := make([]interface{}, 0)
 	argId := 1

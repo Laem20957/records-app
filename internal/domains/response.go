@@ -5,7 +5,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type ErrorResponse struct {
+type MessageResponse struct {
 	Message string `json:"message"`
 }
 
@@ -13,11 +13,11 @@ type StatusResponse struct {
 	Status string `json:"status"`
 }
 
-func NewErrorResponse(c *gin.Context, statusCode int, message string) {
-	logrus.Error(message)
-	c.AbortWithStatusJSON(statusCode, ErrorResponse{Message: message})
-}
-
 type GetAllRecordResponse struct {
 	Data []Record `json:"data"`
+}
+
+func ServerResponse(c *gin.Context, statusCode int, message string) {
+	logrus.Error(message)
+	c.AbortWithStatusJSON(statusCode, MessageResponse{Message: message})
 }

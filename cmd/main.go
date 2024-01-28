@@ -10,13 +10,10 @@ import (
 // @Title Records-App
 // @Version 1.0
 // @Description Server API
-
 // @Contact.name Daniel Kotelnikov
 // @Contact.email danielkotelnikov20@gmail.com
-
 // @Host localhost:8080
 // @BasePath /
-
 // @SecurityDefinitions.apikey ApiKeyAuth
 // @In header
 // @Name Authorization

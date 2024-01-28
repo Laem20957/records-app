@@ -3,8 +3,9 @@ package rest
 import (
 	"net/http"
 
-	service "github.com/Laem20957/records-app/internal/services"
 	"github.com/gin-gonic/gin"
+
+	service "github.com/Laem20957/records-app/internal/services"
 	filesSwagger "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 

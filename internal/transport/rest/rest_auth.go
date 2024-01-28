@@ -10,73 +10,73 @@ import (
 )
 
 // @Summary SignUp
-// @Tags Auth
+// @Tags auth
 // @Description Create new account
 // @ID Create-account
 // @Accept json
-// @Produce son
-// @Param Input body domain.User true "account info"
+// @Produce json
+// @Param input body domain.user_attributes true "account info"
 // @Success 200 {integer} integer 1
-// @Failure 400,404 {object} domain.ErrorResponse
-// @Failure 500 {object} domain.ErrorResponse
-// @Failure default {object} domain.ErrorResponse
+// @Failure 400,404 {object} domain.ServerResponse
+// @Failure 500 {object} domain.ServerResponse
+// @Failure default {object} domain.ServerResponse
 // @Router /auth/sign-up [post]
 
-func (h *Handler) signUp(c *gin.Context) {
+func (h *Handler) signUp(ctx *gin.Context) {
 	var input domain.Users
-	if err := c.BindJSON(&input); err != nil {
-		domain.NewErrorResponse(c, http.StatusBadRequest, "invalid input body")
+	if err := ctx.BindJSON(&input); err != nil {
+		domain.ServerResponse(ctx, http.StatusBadRequest, "invalid input body")
 		return
 	}
 
-	id, err := h.Services.ServiceAuthorizationMethods.CreateUsers(c, input)
+	id, err := h.Services.IServiceAuthorizationMethods.CreateUser(ctx, input)
 	if err != nil {
-		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, map[string]interface{}{
+	ctx.JSON(http.StatusOK, map[string]interface{}{
 		"id": id,
 	})
 }
 
-func (h *Handler) signIn(c *gin.Context) {
+func (h *Handler) signIn(ctx *gin.Context) {
 	var input domain.SignInInput
-	if err := c.BindJSON(&input); err != nil {
-		domain.NewErrorResponse(c, http.StatusBadRequest, err.Error())
+	if err := ctx.BindJSON(&input); err != nil {
+		domain.ServerResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	accessToken, refreshToken, err := h.Services.ServiceAuthorizationMethods.SignIn(c, input)
+	accessToken, refreshToken, err := h.Services.IServiceAuthorizationMethods.SignIn(ctx, input)
 	if err != nil {
-		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.Header("Set-Cookie", fmt.Sprintf("refresh-token='%s'; HttpOnly", refreshToken))
+	ctx.Header("Set-Cookie", fmt.Sprintf("refresh-token='%s'; HttpOnly", refreshToken))
 
-	c.JSON(http.StatusOK, map[string]interface{}{
+	ctx.JSON(http.StatusOK, map[string]interface{}{
 		"token": accessToken,
 	})
 }
 
-func (h *Handler) refresh_token(c *gin.Context) {
-	cookie, err := c.Cookie("refresh-token")
+func (h *Handler) refresh_token(ctx *gin.Context) {
+	cookie, err := ctx.Cookie("refresh-token")
 	if err != nil {
-		domain.NewErrorResponse(c, http.StatusBadRequest, err.Error())
+		domain.ServerResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	token := strings.ReplaceAll(cookie, "'", "")
-	accessToken, refreshToken, err := h.Services.RefreshTokens(c, token)
+	refreshToken, err := h.Services.RefreshToken(ctx, token)
 	if err != nil {
-		domain.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.Header("Set-Cookie", fmt.Sprintf("refresh-token='%s'; HttpOnly", refreshToken))
+	ctx.Header("Set-Cookie", fmt.Sprintf("refresh-token='%s'; HttpOnly", refreshToken))
 
-	c.JSON(http.StatusOK, map[string]interface{}{
-		"token": accessToken,
+	ctx.JSON(http.StatusOK, map[string]interface{}{
+		"token": refreshToken,
 	})
 }

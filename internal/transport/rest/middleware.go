@@ -9,32 +9,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const (
-	authorizationHeader = "Authorization"
-	userContext         = "userId"
-)
+var authorizationHeader = "Authorization"
+var userContext = "userId"
 
 func (hs *Handler) userIdentity(ctx *gin.Context) {
 	header := ctx.GetHeader(authorizationHeader)
 	if header == "" {
-		domain.NewErrorResponse(ctx, http.StatusUnauthorized, "empty auth header")
+		domain.ServerResponse(ctx, http.StatusUnauthorized, "empty auth header")
 		return
 	}
 
 	headerParts := strings.Split(header, " ")
 	if len(headerParts) != 2 || headerParts[0] != "Bearer" {
-		domain.NewErrorResponse(ctx, http.StatusUnauthorized, "invalid auth header")
+		domain.ServerResponse(ctx, http.StatusUnauthorized, "invalid auth header")
 		return
 	}
 
 	if len(headerParts[1]) == 0 {
-		domain.NewErrorResponse(ctx, http.StatusUnauthorized, "token is empty")
+		domain.ServerResponse(ctx, http.StatusUnauthorized, "token is empty")
 		return
 	}
 
-	userId, err := hs.Services.ServiceAuthorizationMethods.ParseToken(headerParts[1])
+	userId, err := hs.Services.IServiceAuthorizationMethods.TokenIsSigned(headerParts[1])
 	if err != nil {
-		domain.NewErrorResponse(ctx, http.StatusUnauthorized, "invalid token")
+		domain.ServerResponse(ctx, http.StatusUnauthorized, "invalid token")
 		return
 	}
 

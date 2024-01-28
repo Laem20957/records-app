@@ -53,14 +53,14 @@ func (hs *HttpServer) HttpServerStart() {
 }
 
 func (hs *HttpServer) HttpServerStop() {
-	stop := make(chan os.Signal, 1)
-	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
-	<-stop
+	server_stop := make(chan os.Signal, 1)
+	signal.Notify(server_stop, os.Interrupt, syscall.SIGTERM)
+	<-server_stop
 
-	context, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+	server_context, server_cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer server_cancel()
 
-	err := hs.server.Shutdown(context)
+	err := hs.server.Shutdown(server_context)
 	if err != nil {
 		hs.logs.Fatal("Error while server stop:", err)
 	} else {
