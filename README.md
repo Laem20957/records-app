@@ -1,6 +1,6 @@
 # The application let create records using REST API
 ### Before using you need to install:
-1. Golang
+1. Golang v1.21.5
 2. Swagger
 3. Docker-compose
 4. Makefile
