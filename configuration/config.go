@@ -26,7 +26,7 @@ type Config struct {
 }
 
 func (config *Config) getConfigENV() {
-	viper.AddConfigPath("records_app/configs")
+	viper.AddConfigPath("records_app/configuration")
 	viper.SetConfigName(".env")
 	viper.SetConfigType("env")
 
@@ -40,7 +40,7 @@ func (config *Config) getConfigENV() {
 }
 
 func (config *Config) getConfigYAML() {
-	viper.AddConfigPath("records_app/configs")
+	viper.AddConfigPath("records_app/configuration")
 	viper.SetConfigName("env")
 	viper.SetConfigType("yml")
 

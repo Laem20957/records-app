@@ -27,6 +27,5 @@ func main() {
 	httpServer.HttpServerSettings().HttpServerStop()
 
 	database := psql.PSQLConnection{}
-	database.PostgresConnectionOpen()
-	database.PostgresConnectionClose()
+	database.PostgreConnection()
 }
