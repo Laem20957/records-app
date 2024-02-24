@@ -1,11 +1,11 @@
-package services
+package service
 
 import (
 	"context"
 
-	config "github.com/Laem20957/records-app/configs"
-	domain "github.com/Laem20957/records-app/internal/domains"
-	repository "github.com/Laem20957/records-app/internal/repositories"
+	config "github.com/Laem20957/records-app/configuration"
+	"github.com/Laem20957/records-app/internal/domain"
+	"github.com/Laem20957/records-app/internal/repository"
 	"github.com/bluele/gcache"
 )
 

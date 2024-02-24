@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	service "github.com/Laem20957/records-app/internal/services"
+	"github.com/Laem20957/records-app/internal/service"
 	filesSwagger "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 

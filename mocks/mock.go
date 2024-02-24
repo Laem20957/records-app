@@ -5,11 +5,11 @@
 package mocks
 
 import (
-	context "context"
-	reflect "reflect"
+	"context"
+	"reflect"
 
-	gomock "github.com/golang/mock/gomock"
-	domain "github.com/Laem20957/records-app/internal/domains"
+	"github.com/golang/mock/gomock"
+	"github.com/Laem20957/records-app/internal/domain"
 )
 
 // MockAuthorization is a mock of Authorization interface.

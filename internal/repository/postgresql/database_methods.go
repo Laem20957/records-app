@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	domain "github.com/Laem20957/records-app/internal/domains"
+	"github.com/Laem20957/records-app/internal/domain"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -24,7 +24,6 @@ func (psql *PSQL) CreateRecordsDB(ctx context.Context, userId int, record domain
 		recordsTable)
 	row := psql.dblib.QueryRowContext(ctx, createRecordQuery, userId, record.Title, record.Description)
 	err := row.Scan(&id)
-
 	return id, err
 }
 
@@ -34,7 +33,6 @@ func (psql *PSQL) GetByIDRecordsDB(ctx context.Context, userId, id int) (domain.
 	query := fmt.Sprintf("SELECT id, title, description FROM %s WHERE uid = $1 AND id = $2",
 		recordsTable)
 	err := psql.dblib.GetContext(ctx, &record, query, userId, id)
-
 	return record, err
 }
 
@@ -44,7 +42,6 @@ func (psql *PSQL) GetAllRecordsDB(ctx context.Context, userId int) ([]domain.Rec
 	query := fmt.Sprintf("SELECT id, title, description FROM %s WHERE uid = $1",
 		recordsTable)
 	err := psql.dblib.SelectContext(ctx, &records, query, userId)
-
 	return records, err
 }
 
@@ -53,7 +50,6 @@ func (psql *PSQL) DeleteRecordsDB(ctx context.Context, userId, id int) error {
 		recordsTable)
 
 	_, err := psql.dblib.ExecContext(ctx, query, userId, id)
-
 	return err
 }
 
@@ -80,6 +76,5 @@ func (psql *PSQL) UpdateRecordsDB(ctx context.Context, userId, id int, record do
 	args = append(args, id, userId)
 
 	_, err := psql.dblib.ExecContext(ctx, query, args...)
-
 	return err
 }

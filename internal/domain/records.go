@@ -1,4 +1,4 @@
-package domains
+package domain
 
 type Record struct {
 	ID          int    `json:"id"`

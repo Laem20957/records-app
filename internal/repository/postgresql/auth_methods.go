@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	domain "github.com/Laem20957/records-app/internal/domains"
+	"github.com/Laem20957/records-app/internal/domain"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -24,7 +24,6 @@ func (repo *PSQLAUTH) CreateUserDB(ctx context.Context, user domain.Users) (int,
 	if err := row.Scan(&id); err != nil {
 		return 0, err
 	}
-
 	return id, nil
 }
 
@@ -32,7 +31,6 @@ func (repo *PSQLAUTH) CreateTokenDB(ctx context.Context, token domain.RefreshSes
 	query := fmt.Sprintf("INSERT INTO %s (user_id, token, expires_at) values ($1, $2, $3)",
 		refreshTokensTable)
 	_, err := repo.dblib.ExecContext(ctx, query, token.UserID, token.Token, token.ExpiresAt)
-
 	return err
 }
 
@@ -41,7 +39,6 @@ func (repo *PSQLAUTH) GetUserDB(ctx context.Context, username, password string) 
 
 	var user domain.Users
 	err := repo.dblib.GetContext(ctx, &user, query, username, password)
-
 	return user, err
 }
 
@@ -56,6 +53,5 @@ func (repo *PSQLAUTH) GetTokenDB(ctx context.Context, token string) (domain.Refr
 
 	query = fmt.Sprintf("DELETE FROM %s WHERE user_id=$1", refreshTokensTable)
 	_, err := repo.dblib.ExecContext(ctx, query, t.UserID)
-
 	return t, err
 }

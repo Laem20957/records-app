@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	domain "github.com/Laem20957/records-app/internal/domains"
+	"github.com/Laem20957/records-app/internal/domain"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,13 +23,13 @@ import (
 // @Router /auth/sign-up [post]
 
 func (h *Handler) signUp(ctx *gin.Context) {
-	var input domain.Users
-	if err := ctx.BindJSON(&input); err != nil {
+	var users domain.Users
+	if err := ctx.BindJSON(&users); err != nil {
 		domain.ServerResponse(ctx, http.StatusBadRequest, "invalid input body")
 		return
 	}
 
-	id, err := h.Services.IServiceAuthorizationMethods.CreateUser(ctx, input)
+	id, err := h.Services.IServiceAuthorizationMethods.CreateUser(ctx, users)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -39,6 +39,19 @@ func (h *Handler) signUp(ctx *gin.Context) {
 		"id": id,
 	})
 }
+
+// @Summary SignIn
+// @Tags auth
+// @Description login
+// @ID login
+// @Accept json
+// @Produce json
+// @Param input body domain.SignInInput true "credentials"
+// @Success 200 {string} string "token"
+// @Failure 400,404 {object} domain.ServerResponse
+// @Failure 500 {object} domain.ServerResponse
+// @Failure default {object} domain.ServerResponse
+// @Router /auth/sign-in [post]
 
 func (h *Handler) signIn(ctx *gin.Context) {
 	var input domain.SignInInput
@@ -59,6 +72,18 @@ func (h *Handler) signIn(ctx *gin.Context) {
 		"token": accessToken,
 	})
 }
+
+// @Summary Refresh_token
+// @Tags auth
+// @Description refresh token
+// @ID refresh-token
+// @Accept json
+// @Produce json
+// @Success 200 {string} string "token"
+// @Failure 400,404 {object} domain.ServerResponse
+// @Failure 500 {object} domain.ServerResponse
+// @Failure default {object} domain.ServerResponse
+// @Router /auth/refresh [get]
 
 func (h *Handler) refresh_token(ctx *gin.Context) {
 	cookie, err := ctx.Cookie("refresh-token")

@@ -19,6 +19,7 @@ type Config struct {
 	SigningKey      string        `mapstructure:"sign_key"`
 	PSQLHost        string        `mapstructure:"psql_host"`
 	PSQLPort        int           `mapstructure:"psql_port"`
+	PSQLDBName      string        `mapstructure:"psql_dbname"`
 	PSQLUsername    string        `mapstructure:"psql_username"`
 	PSQLPassword    string        `mapstructure:"psql_password"`
 	PSQLModeSSL     string        `mapstructure:"psql_mode_ssl"`

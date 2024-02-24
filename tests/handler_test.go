@@ -5,7 +5,7 @@ import (
 	_ "net/http/httptest"
 	_ "testing"
 
-	_ "github.com/Laem20957/records-app/internal/services"
+	_ "github.com/Laem20957/records-app/internal/service"
 	_ "github.com/Laem20957/records-app/internal/transport/rest"
 	_ "github.com/stretchr/testify/require"
 )

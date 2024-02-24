@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	domain "github.com/Laem20957/records-app/internal/domains"
+	"github.com/Laem20957/records-app/internal/domain"
 	"github.com/gin-gonic/gin"
 )
 

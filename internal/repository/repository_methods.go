@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 
-	domain "github.com/Laem20957/records-app/internal/domains"
-	psql "github.com/Laem20957/records-app/internal/repositories/postgresql"
+	"github.com/Laem20957/records-app/internal/domain"
+	psql "github.com/Laem20957/records-app/internal/repository/postgresql"
 	"github.com/jmoiron/sqlx"
 )
 

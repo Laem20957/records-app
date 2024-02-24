@@ -1,4 +1,4 @@
-package servers
+package server
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	config "github.com/Laem20957/records-app/configs"
+	config "github.com/Laem20957/records-app/configuration"
 	"github.com/Laem20957/records-app/internal/transport/rest"
 	"github.com/Laem20957/records-app/pkg/logger"
 	"github.com/sirupsen/logrus"
@@ -53,14 +53,14 @@ func (hs *HttpServer) HttpServerStart() {
 }
 
 func (hs *HttpServer) HttpServerStop() {
-	server_stop := make(chan os.Signal, 1)
-	signal.Notify(server_stop, os.Interrupt, syscall.SIGTERM)
-	<-server_stop
+	serverStop := make(chan os.Signal, 1)
+	signal.Notify(serverStop, os.Interrupt, syscall.SIGTERM)
+	<-serverStop
 
-	server_context, server_cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer server_cancel()
+	serverContext, serverCancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer serverCancel()
 
-	err := hs.server.Shutdown(server_context)
+	err := hs.server.Shutdown(serverContext)
 	if err != nil {
 		hs.logs.Fatal("Error while server stop:", err)
 	} else {

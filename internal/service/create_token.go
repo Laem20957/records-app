@@ -1,4 +1,4 @@
-package services
+package service
 
 import (
 	"context"
@@ -8,9 +8,9 @@ import (
 	"math/rand"
 	"time"
 
-	config "github.com/Laem20957/records-app/configs"
-	domain "github.com/Laem20957/records-app/internal/domains"
-	repository "github.com/Laem20957/records-app/internal/repositories"
+	config "github.com/Laem20957/records-app/configuration"
+	"github.com/Laem20957/records-app/internal/domain"
+	"github.com/Laem20957/records-app/internal/repository"
 	"github.com/dgrijalva/jwt-go"
 )
 
@@ -31,7 +31,6 @@ func ServiceGetAuth(cfg *config.Config, repo repository.IRepositoryAuthorization
 func generatePasswordHash(s *config.Config, password string) string {
 	hash := sha1.New()
 	hash.Write([]byte(password))
-
 	return fmt.Sprintf("%x", hash.Sum([]byte(s.Salt)))
 }
 
@@ -61,7 +60,6 @@ func (s *ServiceAuth) GenerateToken(ctx context.Context, userId int) (string, st
 	}); err != nil {
 		return "", "", err
 	}
-
 	return accessToken, refreshToken, err
 }
 
@@ -108,7 +106,6 @@ func (s *ServiceAuth) TokenIsSigned(accessToken string) (int, error) {
 	if !ok {
 		return 0, errors.New("token claims are not of type *tokenClaims")
 	}
-
 	return claims.UserId, nil
 }
 
