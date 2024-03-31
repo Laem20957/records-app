@@ -9,21 +9,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// auth.go
-
 // @Summary SignUp
-// @Tags auth
-// @Description Create new account
-// @ID Create-account
+// @Tags default
 // @Accept json
 // @Produce json
 // @Param input body domain.Users true "account info"
 // @Success 200 {integer} integer 1
-// @Failure 400,404 {object} domain.MessageResponse
-// @Failure 500 {object} domain.MessageResponse
-// @Failure default {object} domain.MessageResponse
+// @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /auth/sign-up [post]
-
 func (h *Handler) signUp(ctx *gin.Context) {
 	var users domain.Users
 	if err := ctx.BindJSON(&users); err != nil {
@@ -43,18 +36,13 @@ func (h *Handler) signUp(ctx *gin.Context) {
 }
 
 // @Summary SignIn
-// @Tags auth
-// @Description login
-// @ID login
+// @Tags default
 // @Accept json
 // @Produce json
 // @Param input body domain.SignInInput true "credentials"
 // @Success 200 {string} string "token"
-// @Failure 400,404 {object} domain.MessageResponse
-// @Failure 500 {object} domain.MessageResponse
-// @Failure default {object} domain.MessageResponse
+// @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /auth/sign-in [post]
-
 func (h *Handler) signIn(ctx *gin.Context) {
 	var input domain.SignInInput
 	if err := ctx.BindJSON(&input); err != nil {
@@ -76,17 +64,12 @@ func (h *Handler) signIn(ctx *gin.Context) {
 }
 
 // @Summary Refresh_token
-// @Tags auth
-// @Description refresh token
-// @ID refresh-token
+// @Tags default
 // @Accept json
 // @Produce json
 // @Success 200 {string} string "token"
-// @Failure 400,404 {object} domain.MessageResponse
-// @Failure 500 {object} domain.MessageResponse
-// @Failure default {object} domain.MessageResponse
-// @Router /auth/refresh [get]
-
+// @Failure 500,400,404 {object} domain.MessageResponse
+// @Router /auth/refresh_token [get]
 func (h *Handler) refresh_token(ctx *gin.Context) {
 	cookie, err := ctx.Cookie("refresh-token")
 	if err != nil {

@@ -1,11 +1,11 @@
 build:
-	docker-compose build note-app
+	docker-compose build records-app
 
 run:
-	docker-compose up note-app
+	docker-compose up records-app
 
 migrate:
-	migrate -path ./schema -database 'postgres://postgres:qwerty@0.0.0.0:5432/postgres?sslmode=disable' up
+	migrate -path ./ddl -database 'postgres://postgres:qwerty@0.0.0.0:5432/postgres?sslmode=disable' up
 	
 swag:
 	swag init -g cmd/main.go

@@ -10,13 +10,11 @@ import (
 // @Title Records-App
 // @Version 1.0
 // @Description Server API
-// @Contact.name Daniel Kotelnikov
 // @Host localhost:8080
 // @BasePath /
 // @SecurityDefinitions.apikey ApiKeyAuth
 // @In header
 // @Name Authorization
-
 func main() {
 
 	config.InitConfigs()
