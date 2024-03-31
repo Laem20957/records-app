@@ -8,6 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// note.go
+
 // @Summary Create new record
 // @Security ApiKeyAuth
 // @Tags record
@@ -17,9 +19,9 @@ import (
 // @Produce json
 // @Param input body domain.UpdateRecord true "record info"
 // @Success 200 {integer} integer 1
-// @Failure 400,404 {object} domain.ServerResponse
-// @Failure 500 {object} domain.ServerResponse
-// @Failure default {object} domain.ServerResponse
+// @Failure 400,404 {object} domain.MessageResponse
+// @Failure 500 {object} domain.MessageResponse
+// @Failure default {object} domain.MessageResponse
 // @Router /api/records [post]
 
 func (h *Handler) create(c *gin.Context) {
@@ -54,10 +56,10 @@ func (h *Handler) create(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path integer true "Record ID"
-// @Success 200 {object} domain.Note
-// @Failure 400,404 {object} domain.ServerResponse
-// @Failure 500 {object} domain.ServerResponse
-// @Failure default {object} domain.ServerResponse
+// @Success 200 {object} domain.Record
+// @Failure 400,404 {object} domain.MessageResponse
+// @Failure 500 {object} domain.MessageResponse
+// @Failure default {object} domain.MessageResponse
 // @Router /api/record/{id} [get]
 
 func (h *Handler) getById(c *gin.Context) {
@@ -89,10 +91,10 @@ func (h *Handler) getById(c *gin.Context) {
 // @ID Get-all-record
 // @Accept json
 // @Produce json
-// @Success 200 {object} domain.GetAllNoteResponse
-// @Failure 400,404 {object} domain.ServerResponse
-// @Failure 500 {object} domain.ServerResponse
-// @Failure default {object} domain.ServerResponse
+// @Success 200 {object} domain.GetAllRecordResponse
+// @Failure 400,404 {object} domain.MessageResponse
+// @Failure 500 {object} domain.MessageResponse
+// @Failure default {object} domain.MessageResponse
 // @Router /api/record [get]
 
 func (h *Handler) getAll(c *gin.Context) {
@@ -119,9 +121,9 @@ func (h *Handler) getAll(c *gin.Context) {
 // @Produce json
 // @Param id path integer true "Record ID"
 // @Success 200 {integer} integer 1
-// @Failure 400,404 {object} domain.ServerResponse
-// @Failure 500 {object} domain.ServerResponse
-// @Failure default {object} domain.ServerResponse
+// @Failure 400,404 {object} domain.MessageResponse
+// @Failure 500 {object} domain.MessageResponse
+// @Failure default {object} domain.MessageResponse
 // @Router /api/record/{id} [delete]
 
 func (h *Handler) delete(c *gin.Context) {
@@ -152,11 +154,11 @@ func (h *Handler) delete(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path integer true "Record ID"
-// @Param input body domain.UpdateNote true "record info"
+// @Param input body domain.UpdateRecord true "record info"
 // @Success 200 {integer} integer 1
-// @Failure 400,404 {object} domain.ServerResponse
-// @Failure 500 {object} domain.ServerResponse
-// @Failure default {object} domain.ServerResponse
+// @Failure 400,404 {object} domain.MessageResponse
+// @Failure 500 {object} domain.MessageResponse
+// @Failure default {object} domain.MessageResponse
 // @Router /api/record/{id} [put]
 
 func (h *Handler) update(c *gin.Context) {

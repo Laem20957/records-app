@@ -9,17 +9,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// auth.go
+
 // @Summary SignUp
 // @Tags auth
 // @Description Create new account
 // @ID Create-account
 // @Accept json
 // @Produce json
-// @Param input body domain.user_attributes true "account info"
+// @Param input body domain.Users true "account info"
 // @Success 200 {integer} integer 1
-// @Failure 400,404 {object} domain.ServerResponse
-// @Failure 500 {object} domain.ServerResponse
-// @Failure default {object} domain.ServerResponse
+// @Failure 400,404 {object} domain.MessageResponse
+// @Failure 500 {object} domain.MessageResponse
+// @Failure default {object} domain.MessageResponse
 // @Router /auth/sign-up [post]
 
 func (h *Handler) signUp(ctx *gin.Context) {
@@ -48,9 +50,9 @@ func (h *Handler) signUp(ctx *gin.Context) {
 // @Produce json
 // @Param input body domain.SignInInput true "credentials"
 // @Success 200 {string} string "token"
-// @Failure 400,404 {object} domain.ServerResponse
-// @Failure 500 {object} domain.ServerResponse
-// @Failure default {object} domain.ServerResponse
+// @Failure 400,404 {object} domain.MessageResponse
+// @Failure 500 {object} domain.MessageResponse
+// @Failure default {object} domain.MessageResponse
 // @Router /auth/sign-in [post]
 
 func (h *Handler) signIn(ctx *gin.Context) {
@@ -80,9 +82,9 @@ func (h *Handler) signIn(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Success 200 {string} string "token"
-// @Failure 400,404 {object} domain.ServerResponse
-// @Failure 500 {object} domain.ServerResponse
-// @Failure default {object} domain.ServerResponse
+// @Failure 400,404 {object} domain.MessageResponse
+// @Failure 500 {object} domain.MessageResponse
+// @Failure default {object} domain.MessageResponse
 // @Router /auth/refresh [get]
 
 func (h *Handler) refresh_token(ctx *gin.Context) {

@@ -17,7 +17,7 @@ type GetAllRecordResponse struct {
 	Data []Record `json:"data"`
 }
 
-func ServerResponse(c *gin.Context, statusCode int, message string) {
+func ServerResponse(ctx *gin.Context, statusCode int, message string) {
 	logrus.Error(message)
-	c.AbortWithStatusJSON(statusCode, MessageResponse{Message: message})
+	ctx.AbortWithStatusJSON(statusCode, MessageResponse{Message: message})
 }

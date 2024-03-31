@@ -2,7 +2,6 @@ basePath: /
 host: localhost:8080
 info:
   contact:
-    email: danielkotelnikov20@gmail.com
     name: Daniel Kotelnikov
   description: Server API
   title: Records-App
