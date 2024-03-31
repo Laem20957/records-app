@@ -9,13 +9,13 @@ import (
 )
 
 // @Summary Create new record
-// @Tags default
+// @Tags API
 // @Accept json
 // @Produce json
 // @Param input body domain.UpdateRecord true "record info"
 // @Success 200 {integer} integer 1
 // @Failure 500,400,404 {object} domain.MessageResponse
-// @Router /api/records [post]
+// @Router /api/record [post]
 func (h *Handler) create(ctx *gin.Context) {
 	userId, err := getUserId(ctx)
 	if err != nil {
@@ -34,14 +34,13 @@ func (h *Handler) create(ctx *gin.Context) {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
-
 	ctx.JSON(http.StatusOK, map[string]interface{}{
 		"id": id,
 	})
 }
 
 // @Summary Get record by id
-// @Tags default
+// @Tags API
 // @Accept json
 // @Produce json
 // @Param id path integer true "Record ID"
@@ -60,18 +59,17 @@ func (h *Handler) getById(ctx *gin.Context) {
 		domain.ServerResponse(ctx, http.StatusBadRequest, "invalid id param")
 	}
 
-	note, err := h.Services.GetByIDRecords(ctx, userId, id)
+	record, err := h.Services.GetByIDRecords(ctx, userId, id)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
-
-	ctx.JSON(http.StatusOK, note)
+	ctx.JSON(http.StatusOK, record)
 
 }
 
 // @Summary Get all records
-// @Tags default
+// @Tags API
 // @Accept json
 // @Produce json
 // @Success 200 {object} domain.GetAllRecordResponse
@@ -81,19 +79,19 @@ func (h *Handler) getAll(ctx *gin.Context) {
 	userId, err := getUserId(ctx)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
 	}
 
-	notes, err := h.Services.IServiceRecordMethods.GetAllRecords(ctx, userId)
+	records, err := h.Services.IServiceRecordMethods.GetAllRecords(ctx, userId)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
-
-	ctx.JSON(http.StatusOK, domain.GetAllRecordResponse{Data: notes})
+	ctx.JSON(http.StatusOK, domain.GetAllRecordResponse{Data: records})
 }
 
 // @Summary Delete record by id
-// @Tags default
+// @Tags API
 // @Accept json
 // @Produce json
 // @Param id path integer true "Record ID"
@@ -116,12 +114,11 @@ func (h *Handler) delete(ctx *gin.Context) {
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 	}
-
 	ctx.JSON(http.StatusOK, domain.StatusResponse{Status: "ok"})
 }
 
 // @Summary Update record by id
-// @Tags default
+// @Tags API
 // @Accept json
 // @Produce json
 // @Param id path integer true "Record ID"
@@ -152,6 +149,5 @@ func (h *Handler) update(ctx *gin.Context) {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
-
 	ctx.JSON(http.StatusOK, domain.StatusResponse{Status: "ok"})
 }

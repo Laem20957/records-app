@@ -9,8 +9,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary HealthCheck
+// @Tags HealthCheck
+// @Accept json
+// @Produce json
+// @Success 200 {string} string "OK"
+// @Failure 500,400,404 {object} domain.MessageResponse
+// @Router /healthcheck [get]
+func (h *Handler) healthcheck(ctx *gin.Context) {
+	domain.WriteDetailsResponse(ctx, http.StatusOK, "OK")
+}
+
 // @Summary SignUp
-// @Tags default
+// @Tags Auth
 // @Accept json
 // @Produce json
 // @Param input body domain.Users true "account info"
@@ -36,7 +47,7 @@ func (h *Handler) signUp(ctx *gin.Context) {
 }
 
 // @Summary SignIn
-// @Tags default
+// @Tags Auth
 // @Accept json
 // @Produce json
 // @Param input body domain.SignInInput true "credentials"
@@ -64,7 +75,7 @@ func (h *Handler) signIn(ctx *gin.Context) {
 }
 
 // @Summary Refresh_token
-// @Tags default
+// @Tags Auth
 // @Accept json
 // @Produce json
 // @Success 200 {string} string "token"

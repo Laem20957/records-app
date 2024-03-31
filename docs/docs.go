@@ -24,7 +24,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "default"
+                    "API"
                 ],
                 "summary": "Get all records",
                 "responses": {
@@ -32,6 +32,55 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/domain.GetAllRecordResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.MessageResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.MessageResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.MessageResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API"
+                ],
+                "summary": "Create new record",
+                "parameters": [
+                    {
+                        "description": "record info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.UpdateRecord"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "integer"
                         }
                     },
                     "400": {
@@ -64,7 +113,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "default"
+                    "API"
                 ],
                 "summary": "Get record by id",
                 "parameters": [
@@ -111,7 +160,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "default"
+                    "API"
                 ],
                 "summary": "Update record by id",
                 "parameters": [
@@ -167,7 +216,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "default"
+                    "API"
                 ],
                 "summary": "Delete record by id",
                 "parameters": [
@@ -207,57 +256,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/records": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "default"
-                ],
-                "summary": "Create new record",
-                "parameters": [
-                    {
-                        "description": "record info",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/domain.UpdateRecord"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.MessageResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/domain.MessageResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/domain.MessageResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/auth/refresh_token": {
             "get": {
                 "consumes": [
@@ -267,7 +265,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "default"
+                    "Auth"
                 ],
                 "summary": "Refresh_token",
                 "responses": {
@@ -307,7 +305,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "default"
+                    "Auth"
                 ],
                 "summary": "SignIn",
                 "parameters": [
@@ -358,7 +356,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "default"
+                    "Auth"
                 ],
                 "summary": "SignUp",
                 "parameters": [
@@ -377,6 +375,46 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.MessageResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.MessageResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.MessageResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/healthcheck": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "HealthCheck"
+                ],
+                "summary": "HealthCheck",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     "400": {
@@ -493,13 +531,6 @@ const docTemplate = `{
                     "example": "mdmitry"
                 }
             }
-        }
-    },
-    "securityDefinitions": {
-        "ApiKeyAuth": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
         }
     }
 }`

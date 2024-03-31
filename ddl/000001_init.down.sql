@@ -1,3 +1,5 @@
 DROP TABLE refresh_tokens;
-DROP TABLE notes;
+
+DROP TABLE records;
+
 DROP TABLE users;

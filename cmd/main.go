@@ -12,9 +12,9 @@ import (
 // @Description Server API
 // @Host localhost:8080
 // @BasePath /
-// @SecurityDefinitions.apikey ApiKeyAuth
-// @In header
-// @Name Authorization
+// SecurityDefinitions.apikey ApiKeyAuth
+// In Header
+// Name Authorization
 func main() {
 
 	config.InitConfigs()

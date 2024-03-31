@@ -28,10 +28,10 @@ func ServiceGetAuth(cfg *config.Config, repo repository.IRepositoryAuthorization
 	return &ServiceAuth{cfg, repo}
 }
 
-func generatePasswordHash(s *config.Config, password string) string {
+func generatePasswordHash(cfg *config.Config, password string) string {
 	hash := sha1.New()
 	hash.Write([]byte(password))
-	return fmt.Sprintf("%x", hash.Sum([]byte(s.Salt)))
+	return fmt.Sprintf("%x", hash.Sum([]byte(cfg.Salt)))
 }
 
 func (s *ServiceAuth) GenerateToken(ctx context.Context, userId int) (string, string, error) {
@@ -109,32 +109,6 @@ func (s *ServiceAuth) TokenIsSigned(accessToken string) (int, error) {
 	return claims.UserId, nil
 }
 
-// func (s *ServiceAuth) RefreshToken() (string, error) {
-// 	b := make([]byte, 32)
-//
-// 	ns := rand.NewSource(time.Now().Unix())
-// 	r := rand.New(ns)
-//
-// 	if _, err := r.Read(b); err != nil {
-// 		return "", err
-// 	}
-//
-// 	return fmt.Sprintf("%x", b), nil
-// }
-
-// func (s *ServiceAuth) TokenIsExpired(ctx context.Context, refreshToken string) (string, string, error) {
-// 	session, err := s.repo.GetTokenDB(ctx, refreshToken)
-// 	if err != nil {
-// 		return "", "", err
-// 	}
-//
-// 	if session.ExpiresAt.Unix() < time.Now().Unix() {
-// 		return "", "", errors.New("refresh token expired")
-// 	}
-//
-// 	return s.GenerateToken(ctx, session.UserID)
-// }
-
 func (s *ServiceAuth) CreateUser(ctx context.Context, user domain.Users) (int, error) {
 	user.Password = generatePasswordHash(s.config, user.Password)
 	return s.repo.CreateUserDB(ctx, user)
@@ -145,6 +119,5 @@ func (s *ServiceAuth) SignIn(ctx context.Context, input domain.SignInInput) (str
 	if err != nil {
 		return "", "", err
 	}
-
 	return s.GenerateToken(ctx, user.Id)
 }

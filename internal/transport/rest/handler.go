@@ -24,6 +24,11 @@ func (handler *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 	router.Use(gin.Logger())
 
+	healthcheck := router.Group("/healthcheck")
+	{
+		healthcheck.GET("/healthcheck", handler.healthcheck)
+	}
+
 	auth := router.Group("/auth")
 	{
 		auth.POST("/sign-up", handler.signUp)

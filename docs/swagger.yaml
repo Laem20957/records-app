@@ -97,7 +97,39 @@ paths:
             $ref: '#/definitions/domain.MessageResponse'
       summary: Get all records
       tags:
-      - default
+      - API
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: record info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateRecord'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+      summary: Create new record
+      tags:
+      - API
   /api/record/{id}:
     delete:
       consumes:
@@ -129,7 +161,7 @@ paths:
             $ref: '#/definitions/domain.MessageResponse'
       summary: Delete record by id
       tags:
-      - default
+      - API
     get:
       consumes:
       - application/json
@@ -160,7 +192,7 @@ paths:
             $ref: '#/definitions/domain.MessageResponse'
       summary: Get record by id
       tags:
-      - default
+      - API
     put:
       consumes:
       - application/json
@@ -197,40 +229,7 @@ paths:
             $ref: '#/definitions/domain.MessageResponse'
       summary: Update record by id
       tags:
-      - default
-  /api/records:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: record info
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/domain.UpdateRecord'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: integer
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/domain.MessageResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/domain.MessageResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/domain.MessageResponse'
-      summary: Create new record
-      tags:
-      - default
+      - API
   /auth/refresh_token:
     get:
       consumes:
@@ -256,7 +255,7 @@ paths:
             $ref: '#/definitions/domain.MessageResponse'
       summary: Refresh_token
       tags:
-      - default
+      - Auth
   /auth/sign-in:
     post:
       consumes:
@@ -289,7 +288,7 @@ paths:
             $ref: '#/definitions/domain.MessageResponse'
       summary: SignIn
       tags:
-      - default
+      - Auth
   /auth/sign-up:
     post:
       consumes:
@@ -322,10 +321,31 @@ paths:
             $ref: '#/definitions/domain.MessageResponse'
       summary: SignUp
       tags:
-      - default
-securityDefinitions:
-  ApiKeyAuth:
-    in: header
-    name: Authorization
-    type: apiKey
+      - Auth
+  /healthcheck:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+      summary: HealthCheck
+      tags:
+      - HealthCheck
 swagger: "2.0"

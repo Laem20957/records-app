@@ -20,8 +20,7 @@ func RepositoryGetRecord(dblib *sqlx.DB) *PSQL {
 func (psql *PSQL) CreateRecordsDB(ctx context.Context, userId int, record domain.Record) (int, error) {
 	var id int
 
-	createRecordQuery := fmt.Sprintf("INSERT INTO %s (uid, title, description) VALUES ($1, $2, $3) RETURNING id",
-		recordsTable)
+	createRecordQuery := fmt.Sprintf("INSERT INTO %s (uid, title, description) VALUES ($1, $2, $3) RETURNING id", recordsTable)
 	row := psql.dblib.QueryRowContext(ctx, createRecordQuery, userId, record.Title, record.Description)
 	err := row.Scan(&id)
 	return id, err
@@ -30,8 +29,7 @@ func (psql *PSQL) CreateRecordsDB(ctx context.Context, userId int, record domain
 func (psql *PSQL) GetByIDRecordsDB(ctx context.Context, userId, id int) (domain.Record, error) {
 	var record domain.Record
 
-	query := fmt.Sprintf("SELECT id, title, description FROM %s WHERE uid = $1 AND id = $2",
-		recordsTable)
+	query := fmt.Sprintf("SELECT * FROM %s WHERE uid = $1 AND id = $2", recordsTable)
 	err := psql.dblib.GetContext(ctx, &record, query, userId, id)
 	return record, err
 }
@@ -39,7 +37,7 @@ func (psql *PSQL) GetByIDRecordsDB(ctx context.Context, userId, id int) (domain.
 func (psql *PSQL) GetAllRecordsDB(ctx context.Context, userId int) ([]domain.Record, error) {
 	var records []domain.Record
 
-	query := fmt.Sprintf("SELECT id, title, description FROM %s WHERE uid = $1",
+	query := fmt.Sprintf("SELECT * FROM %s WHERE uid = $1",
 		recordsTable)
 	err := psql.dblib.SelectContext(ctx, &records, query, userId)
 	return records, err
