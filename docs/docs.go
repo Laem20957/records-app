@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/record": {
+        "/api/allrecords": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -53,7 +53,9 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
+            }
+        },
+        "/api/record": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -129,7 +131,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.Record"
+                            "$ref": "#/definitions/domain.Records"
                         }
                     },
                     "400": {
@@ -446,7 +448,7 @@ const docTemplate = `{
                 "data": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/domain.Record"
+                        "$ref": "#/definitions/domain.Records"
                     }
                 }
             }
@@ -459,7 +461,7 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.Record": {
+        "domain.Records": {
             "type": "object",
             "properties": {
                 "description": {

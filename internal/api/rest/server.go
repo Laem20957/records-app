@@ -1,4 +1,4 @@
-package server
+package rest
 
 import (
 	"context"
@@ -10,7 +10,6 @@ import (
 	"time"
 
 	config "github.com/Laem20957/records-app/configuration"
-	"github.com/Laem20957/records-app/internal/transport/rest"
 	"github.com/Laem20957/records-app/pkg/logger"
 	"github.com/sirupsen/logrus"
 )
@@ -18,7 +17,7 @@ import (
 type HttpServer struct {
 	server  *http.Server
 	logs    *logrus.Logger
-	handler *rest.Handler
+	handler *Handler
 }
 
 func (hs *HttpServer) HttpServerSettings() *HttpServer {
@@ -66,6 +65,5 @@ func (hs *HttpServer) HttpServerStop() {
 	} else {
 		hs.logs.Info("Stoping server...")
 	}
-
 	hs.logs.Info("Server was stoped")
 }

@@ -17,7 +17,7 @@ import (
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /healthcheck [get]
 func (h *Handler) healthcheck(ctx *gin.Context) {
-	domain.WriteDetailsResponse(ctx, http.StatusOK, "OK")
+	domain.ServerResponse(ctx, http.StatusOK, "OK")
 }
 
 // @Summary SignUp
@@ -30,7 +30,7 @@ func (h *Handler) healthcheck(ctx *gin.Context) {
 // @Router /auth/sign-up [post]
 func (h *Handler) signUp(ctx *gin.Context) {
 	var users domain.Users
-	if err := ctx.BindJSON(&users); err != nil {
+	if err := ctx.BindJSON(users); err != nil {
 		domain.ServerResponse(ctx, http.StatusBadRequest, "invalid input body")
 		return
 	}

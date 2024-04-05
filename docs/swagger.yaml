@@ -4,7 +4,7 @@ definitions:
     properties:
       data:
         items:
-          $ref: '#/definitions/domain.Record'
+          $ref: '#/definitions/domain.Records'
         type: array
     type: object
   domain.MessageResponse:
@@ -12,7 +12,7 @@ definitions:
       message:
         type: string
     type: object
-  domain.Record:
+  domain.Records:
     properties:
       description:
         example: Description
@@ -72,7 +72,7 @@ info:
   title: Records-App
   version: "1.0"
 paths:
-  /api/record:
+  /api/allrecords:
     get:
       consumes:
       - application/json
@@ -98,6 +98,7 @@ paths:
       summary: Get all records
       tags:
       - API
+  /api/record:
     post:
       consumes:
       - application/json
@@ -177,7 +178,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.Record'
+            $ref: '#/definitions/domain.Records'
         "400":
           description: Bad Request
           schema:

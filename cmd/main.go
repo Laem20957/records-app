@@ -2,7 +2,7 @@ package main
 
 import (
 	config "github.com/Laem20957/records-app/configuration"
-	"github.com/Laem20957/records-app/internal/server"
+	"github.com/Laem20957/records-app/internal/api/rest"
 	psql "github.com/Laem20957/records-app/pkg/database"
 	_ "github.com/lib/pq"
 )
@@ -19,7 +19,7 @@ func main() {
 
 	config.InitConfigs()
 
-	httpServer := server.HttpServer{}
+	httpServer := rest.HttpServer{}
 	httpServer.HttpServerSettings().HttpServerStart()
 	httpServer.HttpServerSettings().HttpServerStop()
 

@@ -21,25 +21,25 @@ func ServiceGetRecords(cfg *config.Config, cache gcache.Cache, repo repository.R
 	return &ServiceRecordDetails{cfg, cache, repo}
 }
 
-func (srd *ServiceRecordDetails) GetAllRecords(ctx context.Context, userId int) ([]domain.Record, error) {
-	return srd.repo.GetAllRecordsDB(ctx, userId)
+func (srd *ServiceRecordDetails) GetAllRecords(ctx context.Context) ([]domain.Records, error) {
+	return srd.repo.GetAllRecordsDB(ctx)
 }
 
-func (srd *ServiceRecordDetails) GetByIDRecords(ctx context.Context, userId, id int) (domain.Record, error) {
+func (srd *ServiceRecordDetails) GetByIDRecords(ctx context.Context, userId, id int) (domain.Records, error) {
 	record, err := srd.cache.Get(fmt.Sprintf("%d.%d", userId, id))
 	if err == nil {
-		return record.(domain.Record), nil
+		return record.(domain.Records), nil
 	}
 
 	record, err = srd.repo.GetByIDRecordsDB(ctx, userId, id)
 	if err != nil {
-		return domain.Record{}, err
+		return domain.Records{}, err
 	}
 	srd.cache.Set(interface{}(userId), srd.config.TTL)
-	return record.(domain.Record), nil
+	return record.(domain.Records), nil
 }
 
-func (srd *ServiceRecordDetails) CreateRecords(ctx context.Context, userId int, note domain.Record) (int, error) {
+func (srd *ServiceRecordDetails) CreateRecords(ctx context.Context, userId int, note domain.Records) (int, error) {
 	id, err := srd.repo.CreateRecordsDB(ctx, userId, note)
 	if err != nil {
 		return 0, err

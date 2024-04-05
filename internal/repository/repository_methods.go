@@ -16,9 +16,9 @@ type IRepositoryAuthorizationMethods interface {
 }
 
 type IRepositoryRecordMethods interface {
-	CreateRecordsDB(ctx context.Context, userId int, record domain.Record) (int, error)
-	GetByIDRecordsDB(ctx context.Context, userId, id int) (domain.Record, error)
-	GetAllRecordsDB(ctx context.Context, userId int) ([]domain.Record, error)
+	CreateRecordsDB(ctx context.Context, userId int, record domain.Records) (int, error)
+	GetByIDRecordsDB(ctx context.Context, userId, id int) (domain.Records, error)
+	GetAllRecordsDB(ctx context.Context) ([]domain.Records, error)
 	DeleteRecordsDB(ctx context.Context, userId, id int) error
 	UpdateRecordsDB(ctx context.Context, userId, id int, newNote domain.UpdateRecord) error
 }

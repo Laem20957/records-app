@@ -1,6 +1,6 @@
 package domain
 
-type Record struct {
+type Records struct {
 	ID          int    `json:"id"`
 	Title       string `json:"title,max=55" example:"Title"`
 	Description string `json:"description,max=255" example:"Description"`

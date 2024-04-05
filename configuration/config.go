@@ -1,4 +1,4 @@
-package configs
+package configuration
 
 import (
 	"time"
@@ -31,7 +31,7 @@ func (config *Config) getConfigENV() {
 	viper.SetConfigType("env")
 
 	if err := viper.ReadInConfig(); err != nil {
-		logs.Fatal("Error reading env file", err)
+		logs.Fatal(err)
 	}
 
 	if err := viper.Unmarshal(&config); err != nil {
@@ -45,7 +45,7 @@ func (config *Config) getConfigYAML() {
 	viper.SetConfigType("yml")
 
 	if err := viper.ReadInConfig(); err != nil {
-		logs.Fatal("Error reading yaml file:", err)
+		logs.Fatal(err)
 	}
 
 	if err := viper.Unmarshal(&config); err != nil {

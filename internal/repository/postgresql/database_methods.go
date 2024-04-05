@@ -10,36 +10,35 @@ import (
 )
 
 type PSQL struct {
-	dblib *sqlx.DB
+	DB *sqlx.DB
 }
 
-func RepositoryGetRecord(dblib *sqlx.DB) *PSQL {
-	return &PSQL{dblib: dblib}
+func RepositoryGetRecord(db *sqlx.DB) *PSQL {
+	return &PSQL{DB: db}
 }
 
-func (psql *PSQL) CreateRecordsDB(ctx context.Context, userId int, record domain.Record) (int, error) {
+func (psql *PSQL) CreateRecordsDB(ctx context.Context, userId int, record domain.Records) (int, error) {
 	var id int
 
 	createRecordQuery := fmt.Sprintf("INSERT INTO %s (uid, title, description) VALUES ($1, $2, $3) RETURNING id", recordsTable)
-	row := psql.dblib.QueryRowContext(ctx, createRecordQuery, userId, record.Title, record.Description)
+	row := psql.DB.QueryRowContext(ctx, createRecordQuery, userId, record.Title, record.Description)
 	err := row.Scan(&id)
 	return id, err
 }
 
-func (psql *PSQL) GetByIDRecordsDB(ctx context.Context, userId, id int) (domain.Record, error) {
-	var record domain.Record
+func (psql *PSQL) GetByIDRecordsDB(ctx context.Context, userId, id int) (domain.Records, error) {
+	var record domain.Records
 
 	query := fmt.Sprintf("SELECT * FROM %s WHERE uid = $1 AND id = $2", recordsTable)
-	err := psql.dblib.GetContext(ctx, &record, query, userId, id)
+	err := psql.DB.GetContext(ctx, &record, query, userId, id)
 	return record, err
 }
 
-func (psql *PSQL) GetAllRecordsDB(ctx context.Context, userId int) ([]domain.Record, error) {
-	var records []domain.Record
+func (psql *PSQL) GetAllRecordsDB(ctx context.Context) ([]domain.Records, error) {
+	var records []domain.Records
 
-	query := fmt.Sprintf("SELECT * FROM %s WHERE uid = $1",
-		recordsTable)
-	err := psql.dblib.SelectContext(ctx, &records, query, userId)
+	query := fmt.Sprintf("SELECT * FROM %s", recordsTable)
+	err := psql.DB.SelectContext(ctx, &records, query)
 	return records, err
 }
 
@@ -47,7 +46,7 @@ func (psql *PSQL) DeleteRecordsDB(ctx context.Context, userId, id int) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE uid = $1 AND id = $2",
 		recordsTable)
 
-	_, err := psql.dblib.ExecContext(ctx, query, userId, id)
+	_, err := psql.DB.ExecContext(ctx, query, userId, id)
 	return err
 }
 
@@ -73,6 +72,6 @@ func (psql *PSQL) UpdateRecordsDB(ctx context.Context, userId, id int, record do
 	query := fmt.Sprintf("UPDATE %s SET %s WHERE id=$%d AND uid=$%d", recordsTable, setQuery, argId, argId+1)
 	args = append(args, id, userId)
 
-	_, err := psql.dblib.ExecContext(ctx, query, args...)
+	_, err := psql.DB.ExecContext(ctx, query, args...)
 	return err
 }

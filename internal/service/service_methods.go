@@ -18,9 +18,9 @@ type IServiceAuthorizationMethods interface {
 }
 
 type IServiceRecordMethods interface {
-	CreateRecords(ctx context.Context, userId int, record domain.Record) (int, error)
-	GetByIDRecords(ctx context.Context, userId, id int) (domain.Record, error)
-	GetAllRecords(ctx context.Context, userId int) ([]domain.Record, error)
+	CreateRecords(ctx context.Context, userId int, record domain.Records) (int, error)
+	GetByIDRecords(ctx context.Context, userId, id int) (domain.Records, error)
+	GetAllRecords(ctx context.Context) ([]domain.Records, error)
 	DeleteRecords(ctx context.Context, userId, id int) error
 	UpdateRecords(ctx context.Context, userId, id int, record domain.UpdateRecord) error
 }

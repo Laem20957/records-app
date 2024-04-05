@@ -17,19 +17,19 @@ import (
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /api/record [post]
 func (h *Handler) create(ctx *gin.Context) {
-	userId, err := getUserId(ctx)
+	context, err := getUserContext(ctx)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	var input domain.Record
+	var input domain.Records
 	if err := ctx.BindJSON(&input); err != nil {
 		domain.ServerResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	id, err := h.Services.IServiceRecordMethods.CreateRecords(ctx, userId, input)
+	id, err := h.Services.IServiceRecordMethods.CreateRecords(ctx, context, input)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -44,11 +44,11 @@ func (h *Handler) create(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path integer true "Record ID"
-// @Success 200 {object} domain.Record
+// @Success 200 {object} domain.Records
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /api/record/{id} [get]
 func (h *Handler) getById(ctx *gin.Context) {
-	userId, err := getUserId(ctx)
+	context, err := getUserContext(ctx)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -57,15 +57,15 @@ func (h *Handler) getById(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusBadRequest, "invalid id param")
+		return
 	}
 
-	record, err := h.Services.GetByIDRecords(ctx, userId, id)
+	record, err := h.Services.GetByIDRecords(ctx, context, id)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 	ctx.JSON(http.StatusOK, record)
-
 }
 
 // @Summary Get all records
@@ -74,15 +74,15 @@ func (h *Handler) getById(ctx *gin.Context) {
 // @Produce json
 // @Success 200 {object} domain.GetAllRecordResponse
 // @Failure 500,400,404 {object} domain.MessageResponse
-// @Router /api/record [get]
+// @Router /api/allrecords [get]
 func (h *Handler) getAll(ctx *gin.Context) {
-	userId, err := getUserId(ctx)
+	context, err := getAllContext(ctx)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	records, err := h.Services.IServiceRecordMethods.GetAllRecords(ctx, userId)
+	records, err := h.Services.IServiceRecordMethods.GetAllRecords(context)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -99,7 +99,7 @@ func (h *Handler) getAll(ctx *gin.Context) {
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /api/record/{id} [delete]
 func (h *Handler) delete(ctx *gin.Context) {
-	userId, err := getUserId(ctx)
+	context, err := getUserContext(ctx)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 	}
@@ -110,11 +110,11 @@ func (h *Handler) delete(ctx *gin.Context) {
 		return
 	}
 
-	err = h.Services.DeleteRecords(ctx, userId, id)
+	err = h.Services.DeleteRecords(ctx, context, id)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 	}
-	ctx.JSON(http.StatusOK, domain.StatusResponse{Status: "ok"})
+	ctx.JSON(http.StatusOK, domain.StatusResponse{Status: "OK"})
 }
 
 // @Summary Update record by id
@@ -127,7 +127,7 @@ func (h *Handler) delete(ctx *gin.Context) {
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /api/record/{id} [put]
 func (h *Handler) update(ctx *gin.Context) {
-	userId, err := getUserId(ctx)
+	context, err := getUserContext(ctx)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -145,9 +145,9 @@ func (h *Handler) update(ctx *gin.Context) {
 		return
 	}
 
-	if err := h.Services.UpdateRecords(ctx, userId, id, input); err != nil {
+	if err := h.Services.UpdateRecords(ctx, context, id, input); err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
-	ctx.JSON(http.StatusOK, domain.StatusResponse{Status: "ok"})
+	ctx.JSON(http.StatusOK, domain.StatusResponse{Status: "OK"})
 }
