@@ -272,9 +272,9 @@ const docTemplate = `{
                 "summary": "Refresh_token",
                 "responses": {
                     "200": {
-                        "description": "token",
+                        "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     "400": {
@@ -323,9 +323,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "token",
+                        "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     "400": {
@@ -486,13 +486,13 @@ const docTemplate = `{
             "properties": {
                 "password": {
                     "type": "string",
-                    "minLength": 8,
-                    "example": "12345678"
+                    "minLength": 4,
+                    "example": "1234"
                 },
                 "username": {
                     "type": "string",
-                    "minLength": 2,
-                    "example": "mdmitry"
+                    "minLength": 1,
+                    "example": "Ivan"
                 }
             }
         },
@@ -519,18 +519,18 @@ const docTemplate = `{
             "properties": {
                 "name": {
                     "type": "string",
-                    "minLength": 2,
-                    "example": "Dmitry"
+                    "minLength": 1,
+                    "example": "Ivan"
                 },
                 "password": {
                     "type": "string",
-                    "minLength": 8,
-                    "example": "12345678"
+                    "minLength": 4,
+                    "example": "1234"
                 },
                 "username": {
                     "type": "string",
-                    "minLength": 2,
-                    "example": "mdmitry"
+                    "minLength": 1,
+                    "example": "ivan"
                 }
             }
         }

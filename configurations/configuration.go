@@ -3,13 +3,14 @@ package configuration
 import (
 	"time"
 
-	"github.com/Laem20957/records-app/pkg/logger"
+	"github.com/Laem20957/records-app/internal/logger"
 	"github.com/spf13/viper"
 )
 
 var logs = logger.CreateLogs()
 
-type Config struct {
+type Configurations struct {
+	// Debug           bool          `mapstructure:"debug"`
 	TTL             time.Duration `mapstructure:"ttl"`
 	TokenTTL        time.Duration `mapstructure:"token_ttl"`
 	RefreshTokenTTL time.Duration `mapstructure:"refresh_token_ttl"`
@@ -25,36 +26,36 @@ type Config struct {
 	PSQLModeSSL     string        `mapstructure:"psql_mode_ssl"`
 }
 
-func (config *Config) getConfigENV() {
-	viper.AddConfigPath("records_app/configuration")
+func (cfg *Configurations) getConfigENV() {
+	viper.AddConfigPath("records_app/configurations")
 	viper.SetConfigName(".env")
 	viper.SetConfigType("env")
 
 	if err := viper.ReadInConfig(); err != nil {
-		logs.Fatal(err)
+		logs.Log().Fatal(err)
 	}
 
-	if err := viper.Unmarshal(&config); err != nil {
-		logs.Fatal(err)
+	if err := viper.Unmarshal(&cfg); err != nil {
+		logs.Log().Fatal(err)
 	}
 }
 
-func (config *Config) getConfigYAML() {
-	viper.AddConfigPath("records_app/configuration")
+func (cfg *Configurations) getConfigYAML() {
+	viper.AddConfigPath("records_app/configurations")
 	viper.SetConfigName("env")
 	viper.SetConfigType("yml")
 
 	if err := viper.ReadInConfig(); err != nil {
-		logs.Fatal(err)
+		logs.Log().Fatal(err)
 	}
 
-	if err := viper.Unmarshal(&config); err != nil {
-		logs.Fatal(err)
+	if err := viper.Unmarshal(&cfg); err != nil {
+		logs.Log().Fatal(err)
 	}
 }
 
-func InitConfigs() *Config {
-	call := &Config{}
+func InitConfigs() *Configurations {
+	call := &Configurations{}
 	call.getConfigENV()
 	call.getConfigYAML()
 	return call

@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	handler "github.com/Laem20957/records-app/api/rest/version/handlers"
 	"github.com/Laem20957/records-app/internal/domain"
 	"github.com/gin-gonic/gin"
 )
@@ -16,7 +17,7 @@ import (
 // @Success 200 {string} string "OK"
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /healthcheck [get]
-func (h *Handler) healthcheck(ctx *gin.Context) {
+func HealthCheck(ctx *gin.Context) {
 	domain.ServerResponse(ctx, http.StatusOK, "OK")
 }
 
@@ -25,17 +26,17 @@ func (h *Handler) healthcheck(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param input body domain.Users true "account info"
-// @Success 200 {integer} integer 1
+// @Success 200 {integer} integer 200
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /auth/sign-up [post]
-func (h *Handler) signUp(ctx *gin.Context) {
+func SignUp(ctx *gin.Context) {
 	var users domain.Users
-	if err := ctx.BindJSON(users); err != nil {
+	if err := ctx.BindJSON(&users); err != nil {
 		domain.ServerResponse(ctx, http.StatusBadRequest, "invalid input body")
 		return
 	}
 
-	id, err := h.Services.IServiceAuthorizationMethods.CreateUser(ctx, users)
+	id, err := handler.Handler{}.Services.IServiceAuthorizationMethods.CreateUser(ctx, users)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -51,17 +52,17 @@ func (h *Handler) signUp(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param input body domain.SignInInput true "credentials"
-// @Success 200 {string} string "token"
+// @Success 200 {integer} integer 200
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /auth/sign-in [post]
-func (h *Handler) signIn(ctx *gin.Context) {
+func SignIn(ctx *gin.Context) {
 	var input domain.SignInInput
 	if err := ctx.BindJSON(&input); err != nil {
 		domain.ServerResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	accessToken, refreshToken, err := h.Services.IServiceAuthorizationMethods.SignIn(ctx, input)
+	accessToken, refreshToken, err := handler.Handler{}.Services.IServiceAuthorizationMethods.SignIn(ctx, input)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -78,10 +79,10 @@ func (h *Handler) signIn(ctx *gin.Context) {
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Success 200 {string} string "token"
+// @Success 200 {integer} integer 200
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /auth/refresh_token [get]
-func (h *Handler) refresh_token(ctx *gin.Context) {
+func RefreshToken(ctx *gin.Context) {
 	cookie, err := ctx.Cookie("refresh-token")
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusBadRequest, err.Error())
@@ -89,7 +90,7 @@ func (h *Handler) refresh_token(ctx *gin.Context) {
 	}
 
 	token := strings.ReplaceAll(cookie, "'", "")
-	refreshToken, err := h.Services.RefreshToken(ctx, token)
+	refreshToken, err := handler.Handler{}.Services.IServiceAuthorizationMethods.RefreshToken(ctx, token)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return

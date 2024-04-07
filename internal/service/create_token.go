@@ -8,9 +8,9 @@ import (
 	"math/rand"
 	"time"
 
-	config "github.com/Laem20957/records-app/configuration"
+	cfg "github.com/Laem20957/records-app/configurations"
 	"github.com/Laem20957/records-app/internal/domain"
-	"github.com/Laem20957/records-app/internal/repository"
+	repo "github.com/Laem20957/records-app/internal/repository"
 	"github.com/dgrijalva/jwt-go"
 )
 
@@ -20,15 +20,15 @@ type tokenClaims struct {
 }
 
 type ServiceAuth struct {
-	config *config.Config
-	repo   repository.IRepositoryAuthorizationMethods
+	cfg  *cfg.Configurations
+	repo repo.IRepositoryAuthorizationMethods
 }
 
-func ServiceGetAuth(cfg *config.Config, repo repository.IRepositoryAuthorizationMethods) *ServiceAuth {
+func ServiceGetAuth(cfg *cfg.Configurations, repo repo.IRepositoryAuthorizationMethods) *ServiceAuth {
 	return &ServiceAuth{cfg, repo}
 }
 
-func generatePasswordHash(cfg *config.Config, password string) string {
+func generatePasswordHash(cfg *cfg.Configurations, password string) string {
 	hash := sha1.New()
 	hash.Write([]byte(password))
 	return fmt.Sprintf("%x", hash.Sum([]byte(cfg.Salt)))
@@ -37,13 +37,13 @@ func generatePasswordHash(cfg *config.Config, password string) string {
 func (s *ServiceAuth) GenerateToken(ctx context.Context, userId int) (string, string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(s.config.TokenTTL).Unix(),
+			ExpiresAt: time.Now().Add(s.cfg.TokenTTL).Unix(),
 			IssuedAt:  time.Now().Unix(),
 		},
 		userId,
 	})
 
-	accessToken, err := token.SignedString([]byte(s.config.SigningKey))
+	accessToken, err := token.SignedString([]byte(s.cfg.SigningKey))
 	if err != nil {
 		return "", "", err
 	}
@@ -56,7 +56,7 @@ func (s *ServiceAuth) GenerateToken(ctx context.Context, userId int) (string, st
 	if err := s.repo.CreateTokenDB(ctx, domain.RefreshSession{
 		UserID:    userId,
 		Token:     refreshToken,
-		ExpiresAt: time.Now().Add(s.config.RefreshTokenTTL),
+		ExpiresAt: time.Now().Add(s.cfg.RefreshTokenTTL),
 	}); err != nil {
 		return "", "", err
 	}
@@ -81,7 +81,7 @@ func (s *ServiceAuth) RefreshToken(ctx context.Context, refreshToken string) (st
 		newRefreshToken := fmt.Sprintf("%x", buffer)
 
 		refreshSession.Token = newRefreshToken
-		refreshSession.ExpiresAt = time.Now().Add(s.config.RefreshTokenTTL)
+		refreshSession.ExpiresAt = time.Now().Add(s.cfg.RefreshTokenTTL)
 		if err := s.repo.CreateTokenDB(ctx, refreshSession); err != nil {
 			return "", err
 		}
@@ -96,7 +96,7 @@ func (s *ServiceAuth) TokenIsSigned(accessToken string) (int, error) {
 			return nil, errors.New("invalid signing method")
 		}
 
-		return []byte(s.config.SigningKey), nil
+		return []byte(s.cfg.SigningKey), nil
 	})
 	if err != nil {
 		return 0, err
@@ -110,12 +110,12 @@ func (s *ServiceAuth) TokenIsSigned(accessToken string) (int, error) {
 }
 
 func (s *ServiceAuth) CreateUser(ctx context.Context, user domain.Users) (int, error) {
-	user.Password = generatePasswordHash(s.config, user.Password)
+	user.Password = generatePasswordHash(s.cfg, user.Password)
 	return s.repo.CreateUserDB(ctx, user)
 }
 
 func (s *ServiceAuth) SignIn(ctx context.Context, input domain.SignInInput) (string, string, error) {
-	user, err := s.repo.GetUserDB(ctx, input.Username, generatePasswordHash(s.config, input.Password))
+	user, err := s.repo.GetUserDB(ctx, input.Username, generatePasswordHash(s.cfg, input.Password))
 	if err != nil {
 		return "", "", err
 	}

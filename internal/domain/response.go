@@ -18,6 +18,6 @@ type GetAllRecordResponse struct {
 }
 
 func ServerResponse(ctx *gin.Context, statusCode int, message string) {
-	logrus.Error(message)
+	logrus.Info(message)
 	ctx.AbortWithStatusJSON(statusCode, MessageResponse{Message: message})
 }

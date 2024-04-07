@@ -1,4 +1,4 @@
-package postgresql
+package repository
 
 var usersTable = "users"
 var recordsTable = "records"

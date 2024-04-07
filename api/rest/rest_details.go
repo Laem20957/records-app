@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	middleware "github.com/Laem20957/records-app/api/rest/version/handlers"
 	"github.com/Laem20957/records-app/internal/domain"
 	"github.com/gin-gonic/gin"
 )
@@ -13,11 +14,11 @@ import (
 // @Accept json
 // @Produce json
 // @Param input body domain.UpdateRecord true "record info"
-// @Success 200 {integer} integer 1
+// @Success 200 {integer} integer 200
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /api/record [post]
-func (h *Handler) create(ctx *gin.Context) {
-	context, err := getUserContext(ctx)
+func Create(ctx *gin.Context) {
+	context, err := middleware.GetUserContext(ctx)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -29,7 +30,7 @@ func (h *Handler) create(ctx *gin.Context) {
 		return
 	}
 
-	id, err := h.Services.IServiceRecordMethods.CreateRecords(ctx, context, input)
+	id, err := middleware.Handler{}.Services.IServiceRecordMethods.CreateRecords(ctx, context, input)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -47,8 +48,8 @@ func (h *Handler) create(ctx *gin.Context) {
 // @Success 200 {object} domain.Records
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /api/record/{id} [get]
-func (h *Handler) getById(ctx *gin.Context) {
-	context, err := getUserContext(ctx)
+func GetById(ctx *gin.Context) {
+	context, err := middleware.GetUserContext(ctx)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -60,7 +61,7 @@ func (h *Handler) getById(ctx *gin.Context) {
 		return
 	}
 
-	record, err := h.Services.GetByIDRecords(ctx, context, id)
+	record, err := middleware.Handler{}.Services.IServiceRecordMethods.GetByIDRecords(ctx, context, id)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -75,14 +76,14 @@ func (h *Handler) getById(ctx *gin.Context) {
 // @Success 200 {object} domain.GetAllRecordResponse
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /api/allrecords [get]
-func (h *Handler) getAll(ctx *gin.Context) {
-	context, err := getAllContext(ctx)
+func GetAll(ctx *gin.Context) {
+	context, err := middleware.GetAllContext(ctx)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	records, err := h.Services.IServiceRecordMethods.GetAllRecords(context)
+	records, err := middleware.Handler{}.Services.IServiceRecordMethods.GetAllRecords(context)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -95,13 +96,14 @@ func (h *Handler) getAll(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path integer true "Record ID"
-// @Success 200 {integer} integer 1
+// @Success 200 {integer} integer 200
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /api/record/{id} [delete]
-func (h *Handler) delete(ctx *gin.Context) {
-	context, err := getUserContext(ctx)
+func Delete(ctx *gin.Context) {
+	context, err := middleware.GetUserContext(ctx)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	id, err := strconv.Atoi(ctx.Param("id"))
@@ -110,9 +112,10 @@ func (h *Handler) delete(ctx *gin.Context) {
 		return
 	}
 
-	err = h.Services.DeleteRecords(ctx, context, id)
+	err = middleware.Handler{}.Services.IServiceRecordMethods.DeleteRecords(ctx, context, id)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
 	}
 	ctx.JSON(http.StatusOK, domain.StatusResponse{Status: "OK"})
 }
@@ -123,11 +126,11 @@ func (h *Handler) delete(ctx *gin.Context) {
 // @Produce json
 // @Param id path integer true "Record ID"
 // @Param input body domain.UpdateRecord true "record info"
-// @Success 200 {integer} integer 1
+// @Success 200 {integer} integer 200
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /api/record/{id} [put]
-func (h *Handler) update(ctx *gin.Context) {
-	context, err := getUserContext(ctx)
+func Update(ctx *gin.Context) {
+	context, err := middleware.GetUserContext(ctx)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -145,7 +148,8 @@ func (h *Handler) update(ctx *gin.Context) {
 		return
 	}
 
-	if err := h.Services.UpdateRecords(ctx, context, id, input); err != nil {
+	err = middleware.Handler{}.Services.IServiceRecordMethods.UpdateRecords(ctx, context, id, input)
+	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}

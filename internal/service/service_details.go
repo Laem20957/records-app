@@ -5,19 +5,19 @@ import (
 	"errors"
 	"fmt"
 
-	config "github.com/Laem20957/records-app/configuration"
+	cfg "github.com/Laem20957/records-app/configurations"
 	"github.com/Laem20957/records-app/internal/domain"
-	"github.com/Laem20957/records-app/internal/repository"
+	repo "github.com/Laem20957/records-app/internal/repository"
 	"github.com/bluele/gcache"
 )
 
 type ServiceRecordDetails struct {
-	config *config.Config
-	cache  gcache.Cache
-	repo   repository.RepositoryMethods
+	cfg   *cfg.Configurations
+	cache gcache.Cache
+	repo  repo.RepositoryMethods
 }
 
-func ServiceGetRecords(cfg *config.Config, cache gcache.Cache, repo repository.RepositoryMethods) *ServiceRecordDetails {
+func ServiceGetRecords(cfg *cfg.Configurations, cache gcache.Cache, repo repo.RepositoryMethods) *ServiceRecordDetails {
 	return &ServiceRecordDetails{cfg, cache, repo}
 }
 
@@ -35,7 +35,7 @@ func (srd *ServiceRecordDetails) GetByIDRecords(ctx context.Context, userId, id 
 	if err != nil {
 		return domain.Records{}, err
 	}
-	srd.cache.Set(interface{}(userId), srd.config.TTL)
+	srd.cache.Set(interface{}(userId), srd.cfg.TTL)
 	return record.(domain.Records), nil
 }
 
@@ -44,16 +44,16 @@ func (srd *ServiceRecordDetails) CreateRecords(ctx context.Context, userId int, 
 	if err != nil {
 		return 0, err
 	}
-	srd.cache.Set(interface{}(userId), srd.config.TTL)
+	srd.cache.Set(interface{}(userId), srd.cfg.TTL)
 	return id, nil
 }
 
-func (s *ServiceRecordDetails) UpdateRecords(ctx context.Context, userId, id int, newNote domain.UpdateRecord) error {
-	if !newNote.IsValid() {
+func (s *ServiceRecordDetails) UpdateRecords(ctx context.Context, userId, id int, record domain.UpdateRecord) error {
+	if !record.IsValid() {
 		return errors.New("update structure has no values")
 	}
-	s.cache.Set(interface{}(newNote), s.config.TTL)
-	return s.repo.UpdateRecordsDB(ctx, userId, id, newNote)
+	s.cache.Set(interface{}(record), s.cfg.TTL)
+	return s.repo.UpdateRecordsDB(ctx, userId, id, record)
 }
 
 func (s *ServiceRecordDetails) DeleteRecords(ctx context.Context, userId, id int) error {

@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	config "github.com/Laem20957/records-app/configuration"
+	cfg "github.com/Laem20957/records-app/configurations"
 	"github.com/Laem20957/records-app/internal/domain"
 	"github.com/Laem20957/records-app/internal/repository"
 	"github.com/bluele/gcache"
@@ -30,7 +30,7 @@ type ServiceMethods struct {
 	IServiceRecordMethods
 }
 
-func ServiceGetMethods(cfg *config.Config, cache gcache.Cache, repo *repository.RepositoryMethods) *ServiceMethods {
+func ServiceGetMethods(cfg *cfg.Configurations, cache gcache.Cache, repo *repository.RepositoryMethods) *ServiceMethods {
 	return &ServiceMethods{
 		IServiceAuthorizationMethods: ServiceGetAuth(cfg, repo.IRepositoryAuthorizationMethods.(repository.RepositoryMethods)),
 		IServiceRecordMethods:        ServiceGetRecords(cfg, cache, repo.IRepositoryRecordMethods.(repository.RepositoryMethods)),

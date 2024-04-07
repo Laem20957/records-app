@@ -1,10 +1,10 @@
-package database
+package repository
 
 import (
 	"fmt"
 
-	config "github.com/Laem20957/records-app/configuration"
-	"github.com/Laem20957/records-app/pkg/logger"
+	cfg "github.com/Laem20957/records-app/configurations"
+	"github.com/Laem20957/records-app/internal/logger"
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
 )
@@ -12,7 +12,7 @@ import (
 var logs = logger.CreateLogs()
 
 type PSQLConnection struct {
-	cfg config.Config
+	cfg cfg.Configurations
 	db  *sqlx.DB
 }
 
@@ -31,7 +31,7 @@ func (p *PSQLConnection) PostgreConnection() *PSQLConnection {
 		db:  conn,
 	}
 	if err != nil {
-		logs.Fatal("Error while opening connection to database ", err)
+		logs.Log().Fatal("Error while opening connection to database ", err)
 	}
 
 	defer psqlConn.db.Close()

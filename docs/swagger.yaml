@@ -26,12 +26,12 @@ definitions:
   domain.SignInInput:
     properties:
       password:
-        example: "12345678"
-        minLength: 8
+        example: "1234"
+        minLength: 4
         type: string
       username:
-        example: mdmitry
-        minLength: 2
+        example: Ivan
+        minLength: 1
         type: string
     required:
     - password
@@ -49,16 +49,16 @@ definitions:
   domain.Users:
     properties:
       name:
-        example: Dmitry
-        minLength: 2
+        example: Ivan
+        minLength: 1
         type: string
       password:
-        example: "12345678"
-        minLength: 8
+        example: "1234"
+        minLength: 4
         type: string
       username:
-        example: mdmitry
-        minLength: 2
+        example: ivan
+        minLength: 1
         type: string
     required:
     - name
@@ -239,9 +239,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: token
+          description: OK
           schema:
-            type: string
+            type: integer
         "400":
           description: Bad Request
           schema:
@@ -272,9 +272,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: token
+          description: OK
           schema:
-            type: string
+            type: integer
         "400":
           description: Bad Request
           schema:

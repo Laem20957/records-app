@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/Laem20957/records-app/internal/domain"
-	psql "github.com/Laem20957/records-app/internal/repository/postgresql"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -20,7 +19,7 @@ type IRepositoryRecordMethods interface {
 	GetByIDRecordsDB(ctx context.Context, userId, id int) (domain.Records, error)
 	GetAllRecordsDB(ctx context.Context) ([]domain.Records, error)
 	DeleteRecordsDB(ctx context.Context, userId, id int) error
-	UpdateRecordsDB(ctx context.Context, userId, id int, newNote domain.UpdateRecord) error
+	UpdateRecordsDB(ctx context.Context, userId, id int, record domain.UpdateRecord) error
 }
 
 type RepositoryMethods struct {
@@ -30,7 +29,7 @@ type RepositoryMethods struct {
 
 func RepositoryGetMethods(db *sqlx.DB) *RepositoryMethods {
 	return &RepositoryMethods{
-		IRepositoryAuthorizationMethods: psql.RepositoryGetAuth(db),
-		IRepositoryRecordMethods:        psql.RepositoryGetRecord(db),
+		IRepositoryAuthorizationMethods: RepositoryGetAuth(db),
+		IRepositoryRecordMethods:        RepositoryGetRecord(db),
 	}
 }

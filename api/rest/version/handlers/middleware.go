@@ -1,4 +1,4 @@
-package rest
+package handlers
 
 import (
 	"errors"
@@ -14,10 +14,10 @@ const (
 	userContext         = "UserContext"
 )
 
-func (h *Handler) userIdentity(ctx *gin.Context) {
+func UserIdentity(ctx *gin.Context) {
 	header := ctx.GetHeader(authorizationHeader)
 	headerParts := strings.Split(header, " ")
-	userId, err := h.Services.IServiceAuthorizationMethods.TokenIsSigned(headerParts[1])
+	userId, err := Handler{}.Services.IServiceAuthorizationMethods.TokenIsSigned(headerParts[1])
 
 	if header == "" {
 		domain.ServerResponse(ctx, http.StatusUnauthorized, "empty auth header")
@@ -32,7 +32,7 @@ func (h *Handler) userIdentity(ctx *gin.Context) {
 	}
 }
 
-func getAllContext(ctx *gin.Context) (*gin.Context, error) {
+func GetAllContext(ctx *gin.Context) (*gin.Context, error) {
 	data, ok := ctx.Get(userContext)
 	if !ok {
 		return nil, errors.New("context not found")
@@ -41,7 +41,7 @@ func getAllContext(ctx *gin.Context) (*gin.Context, error) {
 	}
 }
 
-func getUserContext(ctx *gin.Context) (int, error) {
+func GetUserContext(ctx *gin.Context) (int, error) {
 	id, ok := ctx.Get(userContext)
 	if !ok {
 		return 0, errors.New("context not found")

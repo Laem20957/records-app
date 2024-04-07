@@ -1,4 +1,4 @@
-package rest
+package handlers
 
 import (
 	_ "github.com/Laem20957/records-app/docs"

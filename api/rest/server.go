@@ -9,30 +9,29 @@ import (
 	"syscall"
 	"time"
 
-	config "github.com/Laem20957/records-app/configuration"
-	"github.com/Laem20957/records-app/pkg/logger"
+	cfg "github.com/Laem20957/records-app/configurations"
+	"github.com/Laem20957/records-app/internal/logger"
 	"github.com/sirupsen/logrus"
 )
 
 type HttpServer struct {
-	server  *http.Server
-	logs    *logrus.Logger
-	handler *Handler
+	server *http.Server
+	logs   *logrus.Logger
 }
 
 func (hs *HttpServer) HttpServerSettings() *HttpServer {
-	init_routes := hs.handler.InitRoutes()
+	initRoutes := InitRoutes()
 	logger := logger.CreateLogs()
 
 	return &HttpServer{
-		logs: logger,
+		logs: logger.Log(),
 		server: &http.Server{
 			Addr: fmt.Sprintf(
 				"%s:%d",
-				config.InitConfigs().LocalServerHost,
-				config.InitConfigs().LocalServerPort,
+				cfg.InitConfigs().LocalServerHost,
+				cfg.InitConfigs().LocalServerPort,
 			),
-			Handler:        init_routes,
+			Handler:        initRoutes,
 			MaxHeaderBytes: 1 << 20,
 			ReadTimeout:    10 * time.Second,
 			WriteTimeout:   10 * time.Second,

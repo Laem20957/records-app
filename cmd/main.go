@@ -1,9 +1,9 @@
 package main
 
 import (
-	config "github.com/Laem20957/records-app/configuration"
-	"github.com/Laem20957/records-app/internal/api/rest"
-	psql "github.com/Laem20957/records-app/pkg/database"
+	rest "github.com/Laem20957/records-app/api/rest"
+	cfg "github.com/Laem20957/records-app/configurations"
+	psql "github.com/Laem20957/records-app/internal/repository"
 	_ "github.com/lib/pq"
 )
 
@@ -17,7 +17,7 @@ import (
 // Name Authorization
 func main() {
 
-	config.InitConfigs()
+	cfg.InitConfigs()
 
 	httpServer := rest.HttpServer{}
 	httpServer.HttpServerSettings().HttpServerStart()
