@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	middleware "github.com/Laem20957/records-app/api/rest/version/handlers"
+	middleware "github.com/Laem20957/records-app/api/rest/v1/handlers"
 	"github.com/Laem20957/records-app/internal/domain"
 	"github.com/gin-gonic/gin"
 )

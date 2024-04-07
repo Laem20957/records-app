@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	handler "github.com/Laem20957/records-app/api/rest/version/handlers"
+	handler "github.com/Laem20957/records-app/api/rest/v1/handlers"
 	"github.com/Laem20957/records-app/internal/domain"
 	"github.com/gin-gonic/gin"
 )
