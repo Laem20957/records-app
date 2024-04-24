@@ -1,16 +1,352 @@
 basePath: /
+definitions:
+  domain.GetAllRecordResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/domain.Records'
+        type: array
+    type: object
+  domain.MessageResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  domain.Records:
+    properties:
+      description:
+        example: Description
+        type: string
+      id:
+        type: integer
+      title:
+        example: Title
+        type: string
+    type: object
+  domain.SignInInput:
+    properties:
+      password:
+        example: "1234"
+        minLength: 4
+        type: string
+      username:
+        example: Ivan
+        minLength: 1
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  domain.UpdateRecord:
+    properties:
+      description:
+        example: Description!
+        type: string
+      title:
+        example: Title
+        type: string
+    type: object
+  domain.Users:
+    properties:
+      name:
+        example: Ivan
+        minLength: 1
+        type: string
+      password:
+        example: "1234"
+        minLength: 4
+        type: string
+      username:
+        example: ivan
+        minLength: 1
+        type: string
+    required:
+    - name
+    - password
+    - username
+    type: object
 host: localhost:8080
 info:
-  contact:
-    email: danielkotelnikov20@gmail.com
-    name: Daniel Kotelnikov
+  contact: {}
   description: Server API
   title: Records-App
   version: "1.0"
-paths: {}
-securityDefinitions:
-  ApiKeyAuth:
-    in: header
-    name: Authorization
-    type: apiKey
+paths:
+  /api/allrecords:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.GetAllRecordResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+      summary: Get all records
+      tags:
+      - API
+  /api/record:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: record info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateRecord'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+      summary: Create new record
+      tags:
+      - API
+  /api/record/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Record ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+      summary: Delete record by id
+      tags:
+      - API
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Record ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Records'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+      summary: Get record by id
+      tags:
+      - API
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Record ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: record info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateRecord'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+      summary: Update record by id
+      tags:
+      - API
+  /auth/refresh_token:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+      summary: Refresh_token
+      tags:
+      - Auth
+  /auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: credentials
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SignInInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+      summary: SignIn
+      tags:
+      - Auth
+  /auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Users'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+      summary: SignUp
+      tags:
+      - Auth
+  /healthcheck:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+      summary: HealthCheck
+      tags:
+      - HealthCheck
 swagger: "2.0"

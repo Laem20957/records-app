@@ -5,11 +5,11 @@
 package mocks
 
 import (
-	context "context"
-	reflect "reflect"
+	"context"
+	"reflect"
 
-	gomock "github.com/golang/mock/gomock"
-	domain "github.com/Laem20957/records-app/internal/domains"
+	"github.com/golang/mock/gomock"
+	"github.com/Laem20957/records-app/internal/domain"
 )
 
 // MockAuthorization is a mock of Authorization interface.
@@ -137,7 +137,7 @@ func (m *MockNote) EXPECT() *MockNoteMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockNote) Create(ctx context.Context, userId int, note domain.Record) (int, error) {
+func (m *MockNote) Create(ctx context.Context, userId int, note domain.Records) (int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", ctx, userId, note)
 	ret0, _ := ret[0].(int)
@@ -166,10 +166,10 @@ func (mr *MockNoteMockRecorder) Delete(ctx, userId, id interface{}) *gomock.Call
 }
 
 // GetAll mocks base method.
-func (m *MockNote) GetAll(ctx context.Context, userId int) ([]domain.Record, error) {
+func (m *MockNote) GetAll(ctx context.Context, userId int) ([]domain.Records, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAll", ctx, userId)
-	ret0, _ := ret[0].([]domain.Record)
+	ret0, _ := ret[0].([]domain.Records)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -181,10 +181,10 @@ func (mr *MockNoteMockRecorder) GetAll(ctx, userId interface{}) *gomock.Call {
 }
 
 // GetByID mocks base method.
-func (m *MockNote) GetByID(ctx context.Context, userId, id int) (domain.Record, error) {
+func (m *MockNote) GetByID(ctx context.Context, userId, id int) (domain.Records, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetByID", ctx, userId, id)
-	ret0, _ := ret[0].(domain.Record)
+	ret0, _ := ret[0].(domain.Records)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
