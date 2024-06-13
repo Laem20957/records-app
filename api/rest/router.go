@@ -20,14 +20,14 @@ func InitRoutes() *gin.Engine {
 	{
 		auth.POST("/sign-up", SignUp)
 		auth.POST("/sign-in", SignIn)
-		auth.GET("/refresh", RefreshToken)
+		auth.GET("/refresh-token", RefreshToken)
 	}
 
 	api := router.Group("/api")
 	{
-		api.POST("/", Create)
-		api.GET("/allrecords", GetAll)
-		api.GET("/:id", GetById)
+		api.GET("/all/record", GetAll)
+		api.GET("/record/id", GetById)
+		api.POST("/new/record", Create)
 		api.PUT("/:id", Update)
 		api.DELETE("/:id", Delete)
 	}

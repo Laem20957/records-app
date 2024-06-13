@@ -1,23 +1,27 @@
 package domain
 
 import (
+	"records-app/internal/logger"
+
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 )
 
-type MessageResponse struct {
-	Message string `json:"message"`
-}
-
-type StatusResponse struct {
-	Status string `json:"status"`
-}
+var logs = logger.CreateLogs()
 
 type GetAllRecordResponse struct {
 	Data []Records `json:"data"`
 }
 
+type MessageResponse struct {
+	Message string `json:"message"`
+}
+
+type ResultResponse struct {
+	Status     string `json:"status"`
+	ResponseId int    `json:"responseid,omitempty"`
+}
+
 func ServerResponse(ctx *gin.Context, statusCode int, message string) {
-	logrus.Info(message)
+	logs.Log().Info(message)
 	ctx.AbortWithStatusJSON(statusCode, MessageResponse{Message: message})
 }

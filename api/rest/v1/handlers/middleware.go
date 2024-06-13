@@ -5,13 +5,15 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Laem20957/records-app/internal/domain"
+	"records-app/internal/domain"
+
 	"github.com/gin-gonic/gin"
 )
 
 const (
 	authorizationHeader = "Authorization"
-	userContext         = "UserContext"
+	allContext          = "ContextAll"
+	userContext         = "ContextUser"
 )
 
 func UserIdentity(ctx *gin.Context) {
@@ -33,19 +35,22 @@ func UserIdentity(ctx *gin.Context) {
 }
 
 func GetAllContext(ctx *gin.Context) (*gin.Context, error) {
-	data, ok := ctx.Get(userContext)
+	data, ok := ctx.Get(allContext)
 	if !ok {
 		return nil, errors.New("context not found")
+	} else if data == nil {
+		return nil, errors.New("runtime error:" +
+			"invalid memory address or nil pointer dereference")
 	} else {
 		return data.(*gin.Context), nil
 	}
 }
 
-func GetUserContext(ctx *gin.Context) (int, error) {
+func GetUserContext(ctx *gin.Context) (*gin.Context, error) {
 	id, ok := ctx.Get(userContext)
 	if !ok {
-		return 0, errors.New("context not found")
+		return nil, errors.New("context not found")
 	} else {
-		return id.(int), nil
+		return id.(*gin.Context), nil
 	}
 }

@@ -3,23 +3,24 @@ package repository
 import (
 	"context"
 
-	"github.com/Laem20957/records-app/internal/domain"
-	"github.com/jmoiron/sqlx"
+	"records-app/internal/domain"
+
+	"github.com/jinzhu/gorm"
 )
 
 type IRepositoryAuthorizationMethods interface {
-	CreateUserDB(ctx context.Context, user domain.Users) (int, error)
-	GetUserDB(ctx context.Context, username, password string) (domain.Users, error)
-	CreateTokenDB(ctx context.Context, token domain.RefreshSession) error
-	GetTokenDB(ctx context.Context, token string) (domain.RefreshSession, error)
+	GetUserDB(ctx context.Context, userId int) (domain.Users, error)
+	GetTokenDB(ctx context.Context, tokenId int) (domain.Tokens, error)
+	CreateUserDB(ctx context.Context) (int, error)
+	CreateTokenDB(ctx context.Context) (int, error)
 }
 
 type IRepositoryRecordMethods interface {
-	CreateRecordsDB(ctx context.Context, userId int, record domain.Records) (int, error)
-	GetByIDRecordsDB(ctx context.Context, userId, id int) (domain.Records, error)
 	GetAllRecordsDB(ctx context.Context) ([]domain.Records, error)
-	DeleteRecordsDB(ctx context.Context, userId, id int) error
-	UpdateRecordsDB(ctx context.Context, userId, id int, record domain.UpdateRecord) error
+	GetByIDRecordsDB(ctx context.Context, recordId int) (domain.Records, error)
+	CreateRecordsDB(ctx context.Context) (int, error)
+	UpdateRecordsDB(ctx context.Context, newId int, newTitle string, newDescription string) (domain.Records, error)
+	DeleteRecordsDB(ctx context.Context, recordId int) (int, error)
 }
 
 type RepositoryMethods struct {
@@ -27,7 +28,7 @@ type RepositoryMethods struct {
 	IRepositoryRecordMethods
 }
 
-func RepositoryGetMethods(db *sqlx.DB) *RepositoryMethods {
+func RepositoryGetMethods(db *gorm.DB) *RepositoryMethods {
 	return &RepositoryMethods{
 		IRepositoryAuthorizationMethods: RepositoryGetAuth(db),
 		IRepositoryRecordMethods:        RepositoryGetRecord(db),

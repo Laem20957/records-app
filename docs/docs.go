@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/allrecords": {
+        "/api/all/record": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -55,7 +55,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/record": {
+        "/api/new/record": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -74,7 +74,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.UpdateRecord"
+                            "$ref": "#/definitions/domain.Records"
                         }
                     }
                 ],
@@ -179,7 +179,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.UpdateRecord"
+                            "$ref": "#/definitions/domain.Records"
                         }
                     }
                 ],
@@ -258,7 +258,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth/refresh_token": {
+        "/auth/refresh-token": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -269,7 +269,7 @@ const docTemplate = `{
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Refresh_token",
+                "summary": "RefreshToken",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -317,7 +317,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.SignInInput"
+                            "$ref": "#/definitions/domain.Users"
                         }
                     }
                 ],
@@ -477,50 +477,21 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.SignInInput": {
-            "type": "object",
-            "required": [
-                "password",
-                "username"
-            ],
-            "properties": {
-                "password": {
-                    "type": "string",
-                    "minLength": 4,
-                    "example": "1234"
-                },
-                "username": {
-                    "type": "string",
-                    "minLength": 1,
-                    "example": "Ivan"
-                }
-            }
-        },
-        "domain.UpdateRecord": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string",
-                    "example": "Description!"
-                },
-                "title": {
-                    "type": "string",
-                    "example": "Title"
-                }
-            }
-        },
         "domain.Users": {
             "type": "object",
             "required": [
-                "name",
+                "login",
                 "password",
                 "username"
             ],
             "properties": {
-                "name": {
+                "id": {
+                    "type": "integer"
+                },
+                "login": {
                     "type": "string",
                     "minLength": 1,
-                    "example": "Ivan"
+                    "example": "ivashka"
                 },
                 "password": {
                     "type": "string",
@@ -534,6 +505,13 @@ const docTemplate = `{
                 }
             }
         }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "Header"
+        }
     }
 }`
 
@@ -541,7 +519,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:8080",
-	BasePath:         "/",
+	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "Records-App",
 	Description:      "Server API",

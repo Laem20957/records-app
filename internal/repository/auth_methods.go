@@ -4,54 +4,51 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Laem20957/records-app/internal/domain"
-	"github.com/jmoiron/sqlx"
+	"records-app/internal/domain"
+
+	gorm "github.com/jinzhu/gorm"
 )
 
-type PSQLAUTH struct {
-	dblib *sqlx.DB
+type AuthPostgreSQL struct {
+	DB *gorm.DB
 }
 
-func RepositoryGetAuth(db *sqlx.DB) *PSQLAUTH {
-	return &PSQLAUTH{dblib: db}
+func RepositoryGetAuth(db *gorm.DB) *AuthPostgreSQL {
+	return &AuthPostgreSQL{DB: db}
 }
 
-func (repo *PSQLAUTH) CreateUserDB(ctx context.Context, user domain.Users) (int, error) {
-	query := fmt.Sprintf("INSERT INTO %s (name, username, password_hash) VALUES ($1, $2, $3) RETURNING id", usersTable)
-
-	var id int
-	row := repo.dblib.QueryRowContext(ctx, query, user.Name, user.Username, user.Password)
-	if err := row.Scan(&id); err != nil {
-		return 0, err
-	}
-	return id, nil
-}
-
-func (repo *PSQLAUTH) CreateTokenDB(ctx context.Context, token domain.RefreshSession) error {
-	query := fmt.Sprintf("INSERT INTO %s (user_id, token, expires_at) values ($1, $2, $3)",
-		refreshTokensTable)
-	_, err := repo.dblib.ExecContext(ctx, query, token.UserID, token.Token, token.ExpiresAt)
-	return err
-}
-
-func (repo *PSQLAUTH) GetUserDB(ctx context.Context, username, password string) (domain.Users, error) {
-	query := fmt.Sprintf("SELECT id from %s WHERE username=$1 AND password_hash=$2", usersTable)
-
+func (repo *AuthPostgreSQL) GetUserDB(ctx context.Context, userId int) (domain.Users, error) {
 	var user domain.Users
-	err := repo.dblib.GetContext(ctx, &user, query, username, password)
-	return user, err
+
+	if err := db.Table(fmt.Sprintf("records_app.%s", usersTable)).Where("id = ?", userId).First(&user).Error; err != nil {
+		logs.Error(err)
+	}
+	return user, nil
 }
 
-func (repo *PSQLAUTH) GetTokenDB(ctx context.Context, token string) (domain.RefreshSession, error) {
-	query := fmt.Sprintf("SELECT id, user_id, token, expires_at FROM %s WHERE token = $1",
-		refreshTokensTable)
+func (repo *AuthPostgreSQL) GetTokenDB(ctx context.Context, tokenId int) (domain.Tokens, error) {
+	var token domain.Tokens
 
-	var t domain.RefreshSession
-	if err := repo.dblib.GetContext(ctx, &t, query, token); err != nil {
-		return t, err
+	if err := db.Table(fmt.Sprintf("records_app.%s", refreshTokensTable)).Where("id = ?", tokenId).First(&token).Error; err != nil {
+		logs.Error(err)
 	}
+	return token, nil
+}
 
-	query = fmt.Sprintf("DELETE FROM %s WHERE user_id=$1", refreshTokensTable)
-	_, err := repo.dblib.ExecContext(ctx, query, t.UserID)
-	return t, err
+func (repo *AuthPostgreSQL) CreateUserDB(ctx context.Context) (int, error) {
+	var user domain.Users
+
+	if err := db.Table(fmt.Sprintf("records_app.%s", usersTable)).Create(&user).Error; err != nil {
+		logs.Error(err)
+	}
+	return user.ID, nil
+}
+
+func (repo *AuthPostgreSQL) CreateTokenDB(ctx context.Context) (int, error) {
+	var token domain.Tokens
+
+	if err := db.Table(fmt.Sprintf("records_app.%s", refreshTokensTable)).Create(&token).Error; err != nil {
+		logs.Error(err)
+	}
+	return token.ID, nil
 }

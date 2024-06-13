@@ -9,27 +9,28 @@ import (
 	"syscall"
 	"time"
 
-	cfg "github.com/Laem20957/records-app/configurations"
-	"github.com/Laem20957/records-app/internal/logger"
+	"records-app/internal/logger"
+	"records-app/settings"
+
 	"github.com/sirupsen/logrus"
 )
 
 type HttpServer struct {
-	server *http.Server
 	logs   *logrus.Logger
+	server *http.Server
 }
 
-func (hs *HttpServer) HttpServerSettings() *HttpServer {
+func (hs *HttpServer) NewHttpServer() *HttpServer {
+	settings := settings.GetSettings()
 	initRoutes := InitRoutes()
 	logger := logger.CreateLogs()
-
 	return &HttpServer{
 		logs: logger.Log(),
 		server: &http.Server{
 			Addr: fmt.Sprintf(
 				"%s:%d",
-				cfg.InitConfigs().LocalServerHost,
-				cfg.InitConfigs().LocalServerPort,
+				settings.AppHost,
+				settings.AppPort,
 			),
 			Handler:        initRoutes,
 			MaxHeaderBytes: 1 << 20,
@@ -43,10 +44,9 @@ func (hs *HttpServer) HttpServerStart() {
 	go func() {
 		err := hs.server.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
-			hs.logs.Fatal("Error while server startup:", err)
+			hs.logs.Fatal(err)
 		}
 	}()
-
 	hs.logs.Info("Server was started")
 }
 
@@ -60,9 +60,9 @@ func (hs *HttpServer) HttpServerStop() {
 
 	err := hs.server.Shutdown(serverContext)
 	if err != nil {
-		hs.logs.Fatal("Error while server stop:", err)
+		hs.logs.Fatal(err)
 	} else {
-		hs.logs.Info("Stoping server...")
+		hs.logs.Info("Stopping server...")
 	}
-	hs.logs.Info("Server was stoped")
+	hs.logs.Info("Server was stopped")
 }
