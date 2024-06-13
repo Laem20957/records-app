@@ -31,8 +31,8 @@ func GetSettings() *Settings {
 	var settings Settings
 
 	viper.AddConfigPath("settings")
-	viper.SetConfigName("env")
-	viper.SetConfigType("yml")
+	viper.SetConfigName(".env")
+	viper.SetConfigType("env")
 
 	if err := viper.ReadInConfig(); err != nil {
 		logs.Log().Fatal(err)
