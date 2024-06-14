@@ -5,7 +5,8 @@ import (
 	"strconv"
 
 	handler "records-app/api/rest/v1/handlers"
-	domain "records-app/internal/domain"
+	"records-app/internal/adapters/database/schemas"
+	"records-app/internal/models"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,15 +21,15 @@ import (
 func GetAll(ctx *gin.Context) {
 	ctx, err := handler.GetAllContext(ctx)
 	if err != nil {
-		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		models.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 	records, err := handler.Handler{}.Services.IServiceRecordMethods.GetAllRecords(ctx)
 	if err != nil {
-		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		models.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
-	ctx.JSON(http.StatusOK, domain.GetAllRecordResponse{Data: records})
+	ctx.JSON(http.StatusOK, models.DataResponse{Data: records})
 }
 
 // @Summary Get record by id
@@ -42,17 +43,17 @@ func GetAll(ctx *gin.Context) {
 func GetById(ctx *gin.Context) {
 	ctx, err := handler.GetUserContext(ctx)
 	if err != nil {
-		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		models.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 	recordId, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		domain.ServerResponse(ctx, http.StatusBadRequest, "invalid recordId was passed")
+		models.ServerResponse(ctx, http.StatusBadRequest, "invalid recordId was passed")
 		return
 	}
 	record, err := handler.Handler{}.Services.IServiceRecordMethods.GetByIDRecords(ctx, recordId)
 	if err != nil {
-		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		models.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 	ctx.JSON(http.StatusOK, record)
@@ -67,19 +68,19 @@ func GetById(ctx *gin.Context) {
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /api/new/record [post]
 func Create(ctx *gin.Context) {
-	var input domain.Records
+	var input schemas.Records
 	ctx, err := handler.GetUserContext(ctx)
 	if err != nil {
-		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		models.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 	if err := ctx.BindJSON(&input); err != nil {
-		domain.ServerResponse(ctx, http.StatusBadRequest, err.Error())
+		models.ServerResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 	id, err := handler.Handler{}.Services.IServiceRecordMethods.CreateRecords(ctx)
 	if err != nil {
-		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		models.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 	ctx.JSON(http.StatusOK, map[string]interface{}{
@@ -97,22 +98,22 @@ func Create(ctx *gin.Context) {
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /api/record/{id} [put]
 func Update(ctx *gin.Context) {
-	var record domain.Records
+	var record schemas.Records
 	ctx, err := handler.GetUserContext(ctx)
 	if err != nil {
-		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		models.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 	if err := ctx.BindJSON(&record); err != nil {
-		domain.ServerResponse(ctx, http.StatusBadRequest, err.Error())
+		models.ServerResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 	recordId, err := handler.Handler{}.Services.IServiceRecordMethods.UpdateRecords(ctx, record.ID, record.Title, record.Description)
 	if err != nil {
-		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		models.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
-	ctx.JSON(http.StatusOK, domain.ResultResponse{Status: "OK", ResponseId: recordId.ID})
+	ctx.JSON(http.StatusOK, models.DataResponse{ID: recordId.ID})
 }
 
 // @Summary Delete record by id
@@ -126,18 +127,18 @@ func Update(ctx *gin.Context) {
 func Delete(ctx *gin.Context) {
 	ctx, err := handler.GetUserContext(ctx)
 	if err != nil {
-		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		models.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 	recordId, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		domain.ServerResponse(ctx, http.StatusBadRequest, "invalid id param")
+		models.ServerResponse(ctx, http.StatusBadRequest, "invalid id param")
 		return
 	}
 	recordId, err = handler.Handler{}.Services.IServiceRecordMethods.DeleteRecords(ctx, recordId)
 	if err != nil {
-		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		models.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
-	ctx.JSON(http.StatusOK, domain.ResultResponse{Status: "OK", ResponseId: recordId})
+	ctx.JSON(http.StatusOK, models.DataResponse{ID: recordId})
 }

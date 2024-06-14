@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	domain "records-app/internal/domain"
-	repo "records-app/internal/repository"
-	settings "records-app/settings"
+	"records-app/internal/adapters/database"
+	"records-app/internal/adapters/database/schemas"
+	"records-app/settings"
 
 	"github.com/bluele/gcache"
 )
@@ -14,33 +14,33 @@ import (
 type ServiceRecordDetails struct {
 	settings *settings.Settings
 	cache    gcache.Cache
-	repo     repo.RepositoryMethods
+	db       database.AdapterMethods
 }
 
-func ServiceGetRecords(settings *settings.Settings, cache gcache.Cache, repo repo.RepositoryMethods) *ServiceRecordDetails {
-	return &ServiceRecordDetails{settings, cache, repo}
+func ServiceGetRecords(settings *settings.Settings, cache gcache.Cache, db database.AdapterMethods) *ServiceRecordDetails {
+	return &ServiceRecordDetails{settings, cache, db}
 }
 
-func (s *ServiceRecordDetails) GetAllRecords(ctx context.Context) ([]domain.Records, error) {
-	return s.repo.GetAllRecordsDB(ctx)
+func (s *ServiceRecordDetails) GetAllRecords(ctx context.Context) ([]schemas.Records, error) {
+	return s.db.GetAllRecordsDB(ctx)
 }
 
-func (s *ServiceRecordDetails) GetByIDRecords(ctx context.Context, recordId int) (domain.Records, error) {
+func (s *ServiceRecordDetails) GetByIDRecords(ctx context.Context, recordId int) (schemas.Records, error) {
 	record, err := s.cache.Get(fmt.Sprintf("%d", recordId))
 	if err == nil {
-		return record.(domain.Records), nil
+		return record.(schemas.Records), nil
 	}
 
-	record, err = s.repo.GetByIDRecordsDB(ctx, recordId)
+	record, err = s.db.GetByIDRecordsDB(ctx, recordId)
 	if err != nil {
-		return domain.Records{}, err
+		return schemas.Records{}, err
 	}
 	s.cache.Set(interface{}(recordId), s.settings.TTL)
-	return record.(domain.Records), nil
+	return record.(schemas.Records), nil
 }
 
 func (s *ServiceRecordDetails) CreateRecords(ctx context.Context) (int, error) {
-	recordId, err := s.repo.CreateRecordsDB(ctx)
+	recordId, err := s.db.CreateRecordsDB(ctx)
 	if err != nil {
 		return 0, err
 	}
@@ -49,14 +49,14 @@ func (s *ServiceRecordDetails) CreateRecords(ctx context.Context) (int, error) {
 }
 
 func (s *ServiceRecordDetails) UpdateRecords(ctx context.Context, newId int,
-	newTitle string, newDescription string) (domain.Records, error) {
+	newTitle string, newDescription string) (schemas.Records, error) {
 	// if !newId.IsValid() {
 	// 	return errors.New("update structure has no values")
 	// }
 	s.cache.Set(interface{}(newId), s.settings.TTL)
-	return s.repo.UpdateRecordsDB(ctx, newId, newTitle, newDescription)
+	return s.db.UpdateRecordsDB(ctx, newId, newTitle, newDescription)
 }
 
 func (s *ServiceRecordDetails) DeleteRecords(ctx context.Context, recordId int) (int, error) {
-	return s.repo.DeleteRecordsDB(ctx, recordId)
+	return s.db.DeleteRecordsDB(ctx, recordId)
 }

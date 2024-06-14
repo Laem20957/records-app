@@ -8,9 +8,8 @@ import (
 	_ "testing"
 
 	_ "records-app/api/rest"
-	_ "records-app/internal/domain"
+	_ "records-app/internal/adapters/database/schemas"
 	_ "records-app/internal/service"
-	_ "records-app/mocks"
 
 	_ "github.com/gin-gonic/gin"
 	_ "github.com/golang/mock/gomock"
@@ -19,12 +18,12 @@ import (
 
 /*
 func TestHandler_signUp(t *testing.T) {
-	type mockBehavior func(r *serviceMock.MockAuthorization, ctx context.Context, user domain.Users)
+	type mockBehavior func(r *serviceMock.MockAuthorization, ctx context.Context, user schemas.Users)
 
 	tests := []struct {
 		name                 string
 		inputBody            string
-		inputUser            domain.Users
+		inputUser            schemas.Users
 		mockBehavior         mockBehavior
 		ctx                  context.Context
 		expectedStatusCode   int
@@ -33,13 +32,13 @@ func TestHandler_signUp(t *testing.T) {
 		{
 			name:      "ok",
 			inputBody: `{"id": 0, "username": "username","name": "test name","password": "123456qw"}`,
-			inputUser: domain.Users{
+			inputUser: schemas.Users{
 				Id:       0,
 				Username: "username",
 				Name:     "test name",
 				Password: "123456qw",
 			},
-			mockBehavior: func(r *serviceMock.MockAuthorization, ctx context.Context, user domain.Users) {
+			mockBehavior: func(r *serviceMock.MockAuthorization, ctx context.Context, user schemas.Users) {
 				r.EXPECT().CreateUser(ctx, user).Return(1, nil)
 			},
 			ctx:                  context.Background(),
@@ -49,20 +48,20 @@ func TestHandler_signUp(t *testing.T) {
 		//{
 		//	name:                 "wrong input",
 		//	inputBody:            `{"username": "username"}`,
-		//	inputUser:            domain.User{},
-		//	mockBehavior:         func(r *serviceMock.MockAuthorization, ctx *gin.Context, user domain.User) {},
+		//	inputUser:            schemas.User{},
+		//	mockBehavior:         func(r *serviceMock.MockAuthorization, ctx *gin.Context, user schemas.User) {},
 		//	expectedStatusCode:   400,
 		//	expectedResponseBody: "{\"message\":\"invalid input body\"}",
 		//},
 		//{
 		//	name:      "service error",
 		//	inputBody: `{"username": "username", "name": "test name", "password": "123456qw"}`,
-		//	inputUser: domain.User{
+		//	inputUser: schemas.User{
 		//		Username: "username",
 		//		Name:     "test name",
 		//		Password: "123456qw",
 		//	},
-		//	mockBehavior: func(r *serviceMock.MockAuthorization, ctx *gin.Context, user domain.User) {
+		//	mockBehavior: func(r *serviceMock.MockAuthorization, ctx *gin.Context, user schemas.User) {
 		//		r.EXPECT().CreateUser(ctx, user).Return(0, errors.New("internal server error"))
 		//	},
 		//	expectedStatusCode:   500,
@@ -96,5 +95,4 @@ func TestHandler_signUp(t *testing.T) {
 		})
 	}
 }
-
 */

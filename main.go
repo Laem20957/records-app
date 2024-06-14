@@ -2,8 +2,8 @@ package main
 
 import (
 	"records-app/api/rest"
-	db "records-app/internal/repository"
-	settings "records-app/settings"
+	"records-app/internal/adapters/database"
+	"records-app/settings"
 
 	_ "github.com/lib/pq"
 )
@@ -22,8 +22,8 @@ func main() {
 	httpServer.NewHttpServer().HttpServerStart()
 	httpServer.NewHttpServer().HttpServerStop()
 
-	db, _ := db.ConnectDB()
-	defer db.Close()
+	database, _ := database.ConnectDB()
+	defer database.Close()
 
 	// var record domain.Records
 	// if err := database.Table("records_app.records").Where("id = ?", 1).First(&record).Error; err != nil {

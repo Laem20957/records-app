@@ -1,24 +1,23 @@
-package repository
+package database
 
 import (
 	"context"
 	"fmt"
+	"records-app/internal/adapters/database/schemas"
 
-	"records-app/internal/domain"
-
-	gorm "github.com/jinzhu/gorm"
+	"github.com/jinzhu/gorm"
 )
 
-type AuthPostgreSQL struct {
+type DatabaseAuthORM struct {
 	DB *gorm.DB
 }
 
-func RepositoryGetAuth(db *gorm.DB) *AuthPostgreSQL {
-	return &AuthPostgreSQL{DB: db}
+func AdapterGetAuth(db *gorm.DB) *DatabaseAuthORM {
+	return &DatabaseAuthORM{DB: db}
 }
 
-func (repo *AuthPostgreSQL) GetUserDB(ctx context.Context, userId int) (domain.Users, error) {
-	var user domain.Users
+func (d *DatabaseAuthORM) GetUserDB(ctx context.Context, userId int) (schemas.Users, error) {
+	var user schemas.Users
 
 	if err := db.Table(fmt.Sprintf("records_app.%s", usersTable)).Where("id = ?", userId).First(&user).Error; err != nil {
 		logs.Error(err)
@@ -26,8 +25,8 @@ func (repo *AuthPostgreSQL) GetUserDB(ctx context.Context, userId int) (domain.U
 	return user, nil
 }
 
-func (repo *AuthPostgreSQL) GetTokenDB(ctx context.Context, tokenId int) (domain.Tokens, error) {
-	var token domain.Tokens
+func (d *DatabaseAuthORM) GetTokenDB(ctx context.Context, tokenId int) (schemas.Tokens, error) {
+	var token schemas.Tokens
 
 	if err := db.Table(fmt.Sprintf("records_app.%s", refreshTokensTable)).Where("id = ?", tokenId).First(&token).Error; err != nil {
 		logs.Error(err)
@@ -35,8 +34,8 @@ func (repo *AuthPostgreSQL) GetTokenDB(ctx context.Context, tokenId int) (domain
 	return token, nil
 }
 
-func (repo *AuthPostgreSQL) CreateUserDB(ctx context.Context) (int, error) {
-	var user domain.Users
+func (d *DatabaseAuthORM) CreateUserDB(ctx context.Context) (int, error) {
+	var user schemas.Users
 
 	if err := db.Table(fmt.Sprintf("records_app.%s", usersTable)).Create(&user).Error; err != nil {
 		logs.Error(err)
@@ -44,8 +43,8 @@ func (repo *AuthPostgreSQL) CreateUserDB(ctx context.Context) (int, error) {
 	return user.ID, nil
 }
 
-func (repo *AuthPostgreSQL) CreateTokenDB(ctx context.Context) (int, error) {
-	var token domain.Tokens
+func (d *DatabaseAuthORM) CreateTokenDB(ctx context.Context) (int, error) {
+	var token schemas.Tokens
 
 	if err := db.Table(fmt.Sprintf("records_app.%s", refreshTokensTable)).Create(&token).Error; err != nil {
 		logs.Error(err)

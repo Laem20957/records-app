@@ -1,6 +1,7 @@
-package domain
+package models
 
 import (
+	"records-app/internal/adapters/database/schemas"
 	"records-app/internal/logger"
 
 	"github.com/gin-gonic/gin"
@@ -8,17 +9,17 @@ import (
 
 var logs = logger.CreateLogs()
 
-type GetAllRecordResponse struct {
-	Data []Records `json:"data"`
+type DataResponse struct {
+	ID   int               `json:"id,omitempty"`
+	Data []schemas.Records `json:"data"`
 }
 
 type MessageResponse struct {
 	Message string `json:"message"`
 }
 
-type ResultResponse struct {
-	Status     string `json:"status"`
-	ResponseId int    `json:"responseid,omitempty"`
+type StatusResponse struct {
+	Status string `json:"status"`
 }
 
 func ServerResponse(ctx *gin.Context, statusCode int, message string) {
