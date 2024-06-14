@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	_ "github.com/Laem20957/records-app/docs"
-	"github.com/Laem20957/records-app/internal/service"
+	_ "records-app/docs"
+	"records-app/internal/service"
 )
 
 type Handler struct {
