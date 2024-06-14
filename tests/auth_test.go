@@ -7,10 +7,11 @@ import (
 	_ "net/http/httptest"
 	_ "testing"
 
-	_ "github.com/Laem20957/records-app/api/rest"
-	_ "github.com/Laem20957/records-app/internal/domain"
-	_ "github.com/Laem20957/records-app/internal/service"
-	_ "github.com/Laem20957/records-app/mocks"
+	_ "records-app/api/rest"
+	_ "records-app/internal/domain"
+	_ "records-app/internal/service"
+	_ "records-app/mocks"
+
 	_ "github.com/gin-gonic/gin"
 	_ "github.com/golang/mock/gomock"
 	_ "github.com/stretchr/testify/assert"

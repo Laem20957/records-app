@@ -5,8 +5,9 @@ import (
 	"net/http"
 	"strings"
 
-	handler "github.com/Laem20957/records-app/api/rest/v1/handlers"
-	"github.com/Laem20957/records-app/internal/domain"
+	handler "records-app/api/rest/v1/handlers"
+	"records-app/internal/domain"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,7 +33,7 @@ func HealthCheck(ctx *gin.Context) {
 func SignUp(ctx *gin.Context) {
 	var users domain.Users
 	if err := ctx.BindJSON(&users); err != nil {
-		domain.ServerResponse(ctx, http.StatusBadRequest, "invalid input body")
+		domain.ServerResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -51,12 +52,13 @@ func SignUp(ctx *gin.Context) {
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Param input body domain.SignInInput true "credentials"
+// @Param input body domain.Users true "credentials"
 // @Success 200 {integer} integer 200
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /auth/sign-in [post]
 func SignIn(ctx *gin.Context) {
-	var input domain.SignInInput
+	var input domain.Users
+
 	if err := ctx.BindJSON(&input); err != nil {
 		domain.ServerResponse(ctx, http.StatusBadRequest, err.Error())
 		return
@@ -75,13 +77,13 @@ func SignIn(ctx *gin.Context) {
 	})
 }
 
-// @Summary Refresh_token
+// @Summary RefreshToken
 // @Tags Auth
 // @Accept json
 // @Produce json
 // @Success 200 {integer} integer 200
 // @Failure 500,400,404 {object} domain.MessageResponse
-// @Router /auth/refresh_token [get]
+// @Router /auth/refresh-token [get]
 func RefreshToken(ctx *gin.Context) {
 	cookie, err := ctx.Cookie("refresh-token")
 	if err != nil {

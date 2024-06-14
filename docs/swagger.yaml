@@ -1,4 +1,3 @@
-basePath: /
 definitions:
   domain.GetAllRecordResponse:
     properties:
@@ -23,33 +22,12 @@ definitions:
         example: Title
         type: string
     type: object
-  domain.SignInInput:
-    properties:
-      password:
-        example: "1234"
-        minLength: 4
-        type: string
-      username:
-        example: Ivan
-        minLength: 1
-        type: string
-    required:
-    - password
-    - username
-    type: object
-  domain.UpdateRecord:
-    properties:
-      description:
-        example: Description!
-        type: string
-      title:
-        example: Title
-        type: string
-    type: object
   domain.Users:
     properties:
-      name:
-        example: Ivan
+      id:
+        type: integer
+      login:
+        example: ivashka
         minLength: 1
         type: string
       password:
@@ -61,7 +39,7 @@ definitions:
         minLength: 1
         type: string
     required:
-    - name
+    - login
     - password
     - username
     type: object
@@ -72,7 +50,7 @@ info:
   title: Records-App
   version: "1.0"
 paths:
-  /api/allrecords:
+  /api/all/record:
     get:
       consumes:
       - application/json
@@ -98,7 +76,7 @@ paths:
       summary: Get all records
       tags:
       - API
-  /api/record:
+  /api/new/record:
     post:
       consumes:
       - application/json
@@ -108,7 +86,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/domain.UpdateRecord'
+          $ref: '#/definitions/domain.Records'
       produces:
       - application/json
       responses:
@@ -208,7 +186,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/domain.UpdateRecord'
+          $ref: '#/definitions/domain.Records'
       produces:
       - application/json
       responses:
@@ -231,7 +209,7 @@ paths:
       summary: Update record by id
       tags:
       - API
-  /auth/refresh_token:
+  /auth/refresh-token:
     get:
       consumes:
       - application/json
@@ -254,7 +232,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/domain.MessageResponse'
-      summary: Refresh_token
+      summary: RefreshToken
       tags:
       - Auth
   /auth/sign-in:
@@ -267,7 +245,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/domain.SignInInput'
+          $ref: '#/definitions/domain.Users'
       produces:
       - application/json
       responses:
@@ -349,4 +327,9 @@ paths:
       summary: HealthCheck
       tags:
       - HealthCheck
+securityDefinitions:
+  ApiKeyAuth:
+    in: Header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

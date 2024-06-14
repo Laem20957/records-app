@@ -1,4 +1,4 @@
-# The application let create records using REST API
+## The application let create records using REST API
 ### Before using you need to install:
 1. Golang v1.21.5
 2. Swagger
@@ -26,5 +26,4 @@ make build
 ```
 make run
 ```
-### After launching the application will available on this link - localhost:8080/swagger/index.html
-
+#### After launching the application will available on this link - localhost:8080/swagger/index.html

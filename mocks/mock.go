@@ -9,7 +9,7 @@ import (
 	"reflect"
 
 	"github.com/golang/mock/gomock"
-	"github.com/Laem20957/records-app/internal/domain"
+	"records-app/internal/domain"
 )
 
 // MockAuthorization is a mock of Authorization interface.
@@ -98,7 +98,7 @@ func (mr *MockAuthorizationMockRecorder) RefreshTokens(ctx, refreshToken interfa
 }
 
 // SignIn mocks base method.
-func (m *MockAuthorization) SignIn(ctx context.Context, input domain.SignInInput) (string, string, error) {
+func (m *MockAuthorization) SignIn(ctx context.Context, input domain.Users) (string, string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SignIn", ctx, input)
 	ret0, _ := ret[0].(string)
@@ -196,7 +196,7 @@ func (mr *MockNoteMockRecorder) GetByID(ctx, userId, id interface{}) *gomock.Cal
 }
 
 // Update mocks base method.
-func (m *MockNote) Update(ctx context.Context, userId, id int, newNote domain.UpdateRecord) error {
+func (m *MockNote) Update(ctx context.Context, userId, id int, newNote domain.Records) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", ctx, userId, id, newNote)
 	ret0, _ := ret[0].(error)

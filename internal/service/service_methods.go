@@ -3,26 +3,27 @@ package service
 import (
 	"context"
 
-	cfg "github.com/Laem20957/records-app/configurations"
-	"github.com/Laem20957/records-app/internal/domain"
-	"github.com/Laem20957/records-app/internal/repository"
+	"records-app/internal/domain"
+	"records-app/internal/repository"
+	settings "records-app/settings"
+
 	"github.com/bluele/gcache"
 )
 
 type IServiceAuthorizationMethods interface {
 	CreateUser(ctx context.Context, user domain.Users) (int, error)
-	SignIn(ctx context.Context, input domain.SignInInput) (string, string, error)
+	SignIn(ctx context.Context, input domain.Users) (string, string, error)
 	GenerateToken(ctx context.Context, userId int) (string, string, error)
 	TokenIsSigned(token string) (int, error)
 	RefreshToken(ctx context.Context, refreshToken string) (string, error)
 }
 
 type IServiceRecordMethods interface {
-	CreateRecords(ctx context.Context, userId int, record domain.Records) (int, error)
-	GetByIDRecords(ctx context.Context, userId, id int) (domain.Records, error)
 	GetAllRecords(ctx context.Context) ([]domain.Records, error)
-	DeleteRecords(ctx context.Context, userId, id int) error
-	UpdateRecords(ctx context.Context, userId, id int, record domain.UpdateRecord) error
+	GetByIDRecords(ctx context.Context, recordId int) (domain.Records, error)
+	CreateRecords(ctx context.Context) (int, error)
+	UpdateRecords(ctx context.Context, newId int, newTitle string, newDescription string) (domain.Records, error)
+	DeleteRecords(ctx context.Context, recordId int) (int, error)
 }
 
 type ServiceMethods struct {
@@ -30,9 +31,9 @@ type ServiceMethods struct {
 	IServiceRecordMethods
 }
 
-func ServiceGetMethods(cfg *cfg.Configurations, cache gcache.Cache, repo *repository.RepositoryMethods) *ServiceMethods {
+func ServiceGetMethods(settings *settings.Settings, cache gcache.Cache, repo *repository.RepositoryMethods) *ServiceMethods {
 	return &ServiceMethods{
-		IServiceAuthorizationMethods: ServiceGetAuth(cfg, repo.IRepositoryAuthorizationMethods.(repository.RepositoryMethods)),
-		IServiceRecordMethods:        ServiceGetRecords(cfg, cache, repo.IRepositoryRecordMethods.(repository.RepositoryMethods)),
+		IServiceAuthorizationMethods: nil, // ServiceGetAuth(settings, repo.IRepositoryAuthorizationMethods.(repository.RepositoryMethods)),
+		IServiceRecordMethods:        ServiceGetRecords(settings, cache, repo.IRepositoryRecordMethods.(repository.RepositoryMethods)),
 	}
 }

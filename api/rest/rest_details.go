@@ -4,40 +4,31 @@ import (
 	"net/http"
 	"strconv"
 
-	middleware "github.com/Laem20957/records-app/api/rest/v1/handlers"
-	"github.com/Laem20957/records-app/internal/domain"
+	handler "records-app/api/rest/v1/handlers"
+	domain "records-app/internal/domain"
+
 	"github.com/gin-gonic/gin"
 )
 
-// @Summary Create new record
+// @Summary Get all records
 // @Tags API
 // @Accept json
 // @Produce json
-// @Param input body domain.UpdateRecord true "record info"
-// @Success 200 {integer} integer 200
+// @Success 200 {object} domain.GetAllRecordResponse
 // @Failure 500,400,404 {object} domain.MessageResponse
-// @Router /api/record [post]
-func Create(ctx *gin.Context) {
-	context, err := middleware.GetUserContext(ctx)
+// @Router /api/all/record [get]
+func GetAll(ctx *gin.Context) {
+	ctx, err := handler.GetAllContext(ctx)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
-
-	var input domain.Records
-	if err := ctx.BindJSON(&input); err != nil {
-		domain.ServerResponse(ctx, http.StatusBadRequest, err.Error())
-		return
-	}
-
-	id, err := middleware.Handler{}.Services.IServiceRecordMethods.CreateRecords(ctx, context, input)
+	records, err := handler.Handler{}.Services.IServiceRecordMethods.GetAllRecords(ctx)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
-	ctx.JSON(http.StatusOK, map[string]interface{}{
-		"id": id,
-	})
+	ctx.JSON(http.StatusOK, domain.GetAllRecordResponse{Data: records})
 }
 
 // @Summary Get record by id
@@ -49,19 +40,17 @@ func Create(ctx *gin.Context) {
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /api/record/{id} [get]
 func GetById(ctx *gin.Context) {
-	context, err := middleware.GetUserContext(ctx)
+	ctx, err := handler.GetUserContext(ctx)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
-
-	id, err := strconv.Atoi(ctx.Param("id"))
+	recordId, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		domain.ServerResponse(ctx, http.StatusBadRequest, "invalid id param")
+		domain.ServerResponse(ctx, http.StatusBadRequest, "invalid recordId was passed")
 		return
 	}
-
-	record, err := middleware.Handler{}.Services.IServiceRecordMethods.GetByIDRecords(ctx, context, id)
+	record, err := handler.Handler{}.Services.IServiceRecordMethods.GetByIDRecords(ctx, recordId)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
@@ -69,26 +58,61 @@ func GetById(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, record)
 }
 
-// @Summary Get all records
+// @Summary Create new record
 // @Tags API
 // @Accept json
 // @Produce json
-// @Success 200 {object} domain.GetAllRecordResponse
+// @Param input body domain.Records true "record info"
+// @Success 200 {integer} integer 200
 // @Failure 500,400,404 {object} domain.MessageResponse
-// @Router /api/allrecords [get]
-func GetAll(ctx *gin.Context) {
-	context, err := middleware.GetAllContext(ctx)
+// @Router /api/new/record [post]
+func Create(ctx *gin.Context) {
+	var input domain.Records
+	ctx, err := handler.GetUserContext(ctx)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
+	if err := ctx.BindJSON(&input); err != nil {
+		domain.ServerResponse(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+	id, err := handler.Handler{}.Services.IServiceRecordMethods.CreateRecords(ctx)
+	if err != nil {
+		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+	ctx.JSON(http.StatusOK, map[string]interface{}{
+		"id": id,
+	})
+}
 
-	records, err := middleware.Handler{}.Services.IServiceRecordMethods.GetAllRecords(context)
+// @Summary Update record by id
+// @Tags API
+// @Accept json
+// @Produce json
+// @Param id path integer true "Record ID"
+// @Param input body domain.Records true "record info"
+// @Success 200 {integer} integer 200
+// @Failure 500,400,404 {object} domain.MessageResponse
+// @Router /api/record/{id} [put]
+func Update(ctx *gin.Context) {
+	var record domain.Records
+	ctx, err := handler.GetUserContext(ctx)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
-	ctx.JSON(http.StatusOK, domain.GetAllRecordResponse{Data: records})
+	if err := ctx.BindJSON(&record); err != nil {
+		domain.ServerResponse(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+	recordId, err := handler.Handler{}.Services.IServiceRecordMethods.UpdateRecords(ctx, record.ID, record.Title, record.Description)
+	if err != nil {
+		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+	ctx.JSON(http.StatusOK, domain.ResultResponse{Status: "OK", ResponseId: recordId.ID})
 }
 
 // @Summary Delete record by id
@@ -100,58 +124,20 @@ func GetAll(ctx *gin.Context) {
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /api/record/{id} [delete]
 func Delete(ctx *gin.Context) {
-	context, err := middleware.GetUserContext(ctx)
+	ctx, err := handler.GetUserContext(ctx)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
-
-	id, err := strconv.Atoi(ctx.Param("id"))
+	recordId, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusBadRequest, "invalid id param")
 		return
 	}
-
-	err = middleware.Handler{}.Services.IServiceRecordMethods.DeleteRecords(ctx, context, id)
+	recordId, err = handler.Handler{}.Services.IServiceRecordMethods.DeleteRecords(ctx, recordId)
 	if err != nil {
 		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
-	ctx.JSON(http.StatusOK, domain.StatusResponse{Status: "OK"})
-}
-
-// @Summary Update record by id
-// @Tags API
-// @Accept json
-// @Produce json
-// @Param id path integer true "Record ID"
-// @Param input body domain.UpdateRecord true "record info"
-// @Success 200 {integer} integer 200
-// @Failure 500,400,404 {object} domain.MessageResponse
-// @Router /api/record/{id} [put]
-func Update(ctx *gin.Context) {
-	context, err := middleware.GetUserContext(ctx)
-	if err != nil {
-		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		domain.ServerResponse(ctx, http.StatusBadRequest, "invalid id param")
-		return
-	}
-
-	var input domain.UpdateRecord
-	if err := ctx.BindJSON(&input); err != nil {
-		domain.ServerResponse(ctx, http.StatusBadRequest, err.Error())
-		return
-	}
-
-	err = middleware.Handler{}.Services.IServiceRecordMethods.UpdateRecords(ctx, context, id, input)
-	if err != nil {
-		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
-		return
-	}
-	ctx.JSON(http.StatusOK, domain.StatusResponse{Status: "OK"})
+	ctx.JSON(http.StatusOK, domain.ResultResponse{Status: "OK", ResponseId: recordId})
 }
