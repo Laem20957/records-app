@@ -6,7 +6,9 @@ import (
 	"strings"
 
 	handler "records-app/api/rest/v1/handlers"
-	"records-app/internal/domain"
+	"records-app/internal/adapters/database/schemas"
+
+	"records-app/internal/models"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,7 +21,7 @@ import (
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /healthcheck [get]
 func HealthCheck(ctx *gin.Context) {
-	domain.ServerResponse(ctx, http.StatusOK, "OK")
+	models.ServerResponse(ctx, http.StatusOK, "OK")
 }
 
 // @Summary SignUp
@@ -31,15 +33,15 @@ func HealthCheck(ctx *gin.Context) {
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /auth/sign-up [post]
 func SignUp(ctx *gin.Context) {
-	var users domain.Users
+	var users schemas.Users
 	if err := ctx.BindJSON(&users); err != nil {
-		domain.ServerResponse(ctx, http.StatusBadRequest, err.Error())
+		models.ServerResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	id, err := handler.Handler{}.Services.IServiceAuthorizationMethods.CreateUser(ctx, users)
 	if err != nil {
-		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		models.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -57,16 +59,16 @@ func SignUp(ctx *gin.Context) {
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /auth/sign-in [post]
 func SignIn(ctx *gin.Context) {
-	var input domain.Users
+	var input schemas.Users
 
 	if err := ctx.BindJSON(&input); err != nil {
-		domain.ServerResponse(ctx, http.StatusBadRequest, err.Error())
+		models.ServerResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	accessToken, refreshToken, err := handler.Handler{}.Services.IServiceAuthorizationMethods.SignIn(ctx, input)
 	if err != nil {
-		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		models.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -87,14 +89,14 @@ func SignIn(ctx *gin.Context) {
 func RefreshToken(ctx *gin.Context) {
 	cookie, err := ctx.Cookie("refresh-token")
 	if err != nil {
-		domain.ServerResponse(ctx, http.StatusBadRequest, err.Error())
+		models.ServerResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	token := strings.ReplaceAll(cookie, "'", "")
 	refreshToken, err := handler.Handler{}.Services.IServiceAuthorizationMethods.RefreshToken(ctx, token)
 	if err != nil {
-		domain.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+		models.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
 

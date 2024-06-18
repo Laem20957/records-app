@@ -1,0 +1,7 @@
+#!/bin/sh
+
+echo "Executions checks after commit..."
+
+git log -1 --pretty=%B > commit_message.txt
+echo "Commit has done:" >> commit_message.txt
+git log -1 --pretty=%n%an%n%ae%n%cd >> commit_message.txt

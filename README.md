@@ -6,13 +6,13 @@
 4. Makefile
 5. Migrations
 ### This App contains the following methods:
-[post] /auth/sign-up - to create new user.<br />
-[post] /auth/sign-in - user authentication.<br />
-[get] /api/record - get all records.<br />
-[post] /api/record - create new record.<br />
-[get] /api/record/{id} - get record by id.<br />
-[put] /api/record/{id} - update record by id.<br />
-[delete] /api/record/{id} - delete record by id.<br />
+[post]   /auth/sign-up    - to create new user.<br/>
+[post]   /auth/sign-in    - user authentication.<br/>
+[get]    /api/record      - get all records.<br/>
+[post]   /api/record      - create new record.<br/>
+[get]    /api/record/{id} - get record by id.<br/>
+[put]    /api/record/{id} - update record by id.<br/>
+[delete] /api/record/{id} - delete record by id.<br/>
 ### Installing:
 ```
 git clone https://github.com/Laem20957/records-app.git
@@ -26,4 +26,7 @@ make build
 ```
 make run
 ```
-#### After launching the application will available on this link - localhost:8080/swagger/index.html
+### OpenAPI:
+```
+localhost:8080/swagger/index.html
+```

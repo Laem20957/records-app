@@ -1,8 +1,8 @@
 package service
 
 import (
-	repo "records-app/internal/repository"
-	settings "records-app/settings"
+	"records-app/internal/adapters/database"
+	"records-app/settings"
 
 	"github.com/dgrijalva/jwt-go"
 )
@@ -14,11 +14,11 @@ type tokenClaims struct {
 
 type ServiceAuth struct {
 	settings *settings.Settings
-	repo     repo.IRepositoryAuthorizationMethods
+	db       database.IAdapterAuthorizationMethods
 }
 
-func ServiceGetAuth(cfg *settings.Settings, repo repo.IRepositoryAuthorizationMethods) *ServiceAuth {
-	return &ServiceAuth{cfg, repo}
+func ServiceGetAuth(settings *settings.Settings, db database.IAdapterAuthorizationMethods) *ServiceAuth {
+	return &ServiceAuth{settings, db}
 }
 
 // func generatePasswordHash(cfg *settings.Settings, password string) string {

@@ -2,8 +2,8 @@ package main
 
 import (
 	"records-app/api/rest"
-	db "records-app/internal/repository"
-	settings "records-app/settings"
+	"records-app/internal/adapters/database"
+	"records-app/settings"
 
 	_ "github.com/lib/pq"
 )
@@ -12,6 +12,8 @@ import (
 // @Version 1.0
 // @Description Server API
 // @Host localhost:8080
+// @license.name MIT License
+// @license.url  https://opensource.org/license/MIT
 // @SecurityDefinitions.apikey ApiKeyAuth
 // @In Header
 // @Name Authorization
@@ -22,8 +24,9 @@ func main() {
 	httpServer.NewHttpServer().HttpServerStart()
 	httpServer.NewHttpServer().HttpServerStop()
 
-	db, _ := db.ConnectDB()
-	defer db.Close()
+	database := database.ConnectionDB{}
+	database.ConnectDB()
+	database.CloseDB()
 
 	// var record domain.Records
 	// if err := database.Table("records_app.records").Where("id = ?", 1).First(&record).Error; err != nil {
