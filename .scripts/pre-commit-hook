@@ -1,0 +1,13 @@
+#!/bin/sh
+
+echo "Executions checks before commit..."
+
+files=$(git diff --cached --name-only --diff-filter=ACM)
+
+for file in $files
+do
+    if [[ $file == *.go ]]; then
+        echo "Check golang files: $file"
+        go run compile $file
+    fi
+done

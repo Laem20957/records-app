@@ -1,4 +1,4 @@
-package repository
+package database
 
 var usersTable = "users"
 var recordsTable = "records"

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"records-app/internal/domain"
+	"records-app/internal/models"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,13 +22,13 @@ func UserIdentity(ctx *gin.Context) {
 	userId, err := Handler{}.Services.IServiceAuthorizationMethods.TokenIsSigned(headerParts[1])
 
 	if header == "" {
-		domain.ServerResponse(ctx, http.StatusUnauthorized, "empty auth header")
+		models.ServerResponse(ctx, http.StatusUnauthorized, "empty auth header")
 	} else if len(headerParts) != 2 || headerParts[0] != "Bearer" {
-		domain.ServerResponse(ctx, http.StatusUnauthorized, "invalid auth header")
+		models.ServerResponse(ctx, http.StatusUnauthorized, "invalid auth header")
 	} else if len(headerParts[1]) == 0 {
-		domain.ServerResponse(ctx, http.StatusUnauthorized, "token is empty")
+		models.ServerResponse(ctx, http.StatusUnauthorized, "token is empty")
 	} else if err != nil {
-		domain.ServerResponse(ctx, http.StatusUnauthorized, "invalid token")
+		models.ServerResponse(ctx, http.StatusUnauthorized, "invalid token")
 	} else {
 		ctx.Set(userContext, userId)
 	}
