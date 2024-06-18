@@ -26,7 +26,7 @@ make build
 ```
 make run
 ```
-### After launching the application will available on this link:
+### OpenAPI:
 ```
 localhost:8080/swagger/index.html
 ```
