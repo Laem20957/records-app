@@ -1,17 +1,19 @@
 definitions:
-  domain.GetAllRecordResponse:
+  models.DataResponse:
     properties:
       data:
         items:
-          $ref: '#/definitions/domain.Records'
+          $ref: '#/definitions/schemas.Records'
         type: array
+      id:
+        type: integer
     type: object
-  domain.MessageResponse:
+  models.MessageResponse:
     properties:
       message:
         type: string
     type: object
-  domain.Records:
+  schemas.Records:
     properties:
       description:
         example: Description
@@ -22,7 +24,7 @@ definitions:
         example: Title
         type: string
     type: object
-  domain.Users:
+  schemas.Users:
     properties:
       id:
         type: integer
@@ -47,6 +49,9 @@ host: localhost:8080
 info:
   contact: {}
   description: Server API
+  license:
+    name: MIT License
+    url: https://opensource.org/license/MIT
   title: Records-App
   version: "1.0"
 paths:
@@ -60,19 +65,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.GetAllRecordResponse'
+            $ref: '#/definitions/models.DataResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
       summary: Get all records
       tags:
       - API
@@ -86,7 +91,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/domain.Records'
+          $ref: '#/definitions/schemas.Records'
       produces:
       - application/json
       responses:
@@ -97,15 +102,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
       summary: Create new record
       tags:
       - API
@@ -129,15 +134,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
       summary: Delete record by id
       tags:
       - API
@@ -156,19 +161,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/domain.Records'
+            $ref: '#/definitions/schemas.Records'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
       summary: Get record by id
       tags:
       - API
@@ -186,7 +191,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/domain.Records'
+          $ref: '#/definitions/schemas.Records'
       produces:
       - application/json
       responses:
@@ -197,15 +202,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
       summary: Update record by id
       tags:
       - API
@@ -223,15 +228,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
       summary: RefreshToken
       tags:
       - Auth
@@ -245,7 +250,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/domain.Users'
+          $ref: '#/definitions/schemas.Users'
       produces:
       - application/json
       responses:
@@ -256,15 +261,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
       summary: SignIn
       tags:
       - Auth
@@ -278,7 +283,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/domain.Users'
+          $ref: '#/definitions/schemas.Users'
       produces:
       - application/json
       responses:
@@ -289,15 +294,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
       summary: SignUp
       tags:
       - Auth
@@ -315,15 +320,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/domain.MessageResponse'
+            $ref: '#/definitions/models.MessageResponse'
       summary: HealthCheck
       tags:
       - HealthCheck

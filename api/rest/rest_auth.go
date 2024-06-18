@@ -18,7 +18,7 @@ import (
 // @Accept json
 // @Produce json
 // @Success 200 {string} string "OK"
-// @Failure 500,400,404 {object} domain.MessageResponse
+// @Failure 500,400,404 {object} models.MessageResponse
 // @Router /healthcheck [get]
 func HealthCheck(ctx *gin.Context) {
 	models.ServerResponse(ctx, http.StatusOK, "OK")
@@ -28,9 +28,9 @@ func HealthCheck(ctx *gin.Context) {
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Param input body domain.Users true "account info"
+// @Param input body schemas.Users true "account info"
 // @Success 200 {integer} integer 200
-// @Failure 500,400,404 {object} domain.MessageResponse
+// @Failure 500,400,404 {object} models.MessageResponse
 // @Router /auth/sign-up [post]
 func SignUp(ctx *gin.Context) {
 	var users schemas.Users
@@ -54,9 +54,9 @@ func SignUp(ctx *gin.Context) {
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Param input body domain.Users true "credentials"
+// @Param input body schemas.Users true "credentials"
 // @Success 200 {integer} integer 200
-// @Failure 500,400,404 {object} domain.MessageResponse
+// @Failure 500,400,404 {object} models.MessageResponse
 // @Router /auth/sign-in [post]
 func SignIn(ctx *gin.Context) {
 	var input schemas.Users
@@ -84,7 +84,7 @@ func SignIn(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Success 200 {integer} integer 200
-// @Failure 500,400,404 {object} domain.MessageResponse
+// @Failure 500,400,404 {object} models.MessageResponse
 // @Router /auth/refresh-token [get]
 func RefreshToken(ctx *gin.Context) {
 	cookie, err := ctx.Cookie("refresh-token")

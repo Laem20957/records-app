@@ -15,8 +15,8 @@ import (
 // @Tags API
 // @Accept json
 // @Produce json
-// @Success 200 {object} domain.GetAllRecordResponse
-// @Failure 500,400,404 {object} domain.MessageResponse
+// @Success 200 {object} models.DataResponse
+// @Failure 500,400,404 {object} models.MessageResponse
 // @Router /api/all/record [get]
 func GetAll(ctx *gin.Context) {
 	// ctx, err := handler.GetAllContext(ctx)
@@ -37,8 +37,8 @@ func GetAll(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path integer true "Record ID"
-// @Success 200 {object} domain.Records
-// @Failure 500,400,404 {object} domain.MessageResponse
+// @Success 200 {object} schemas.Records
+// @Failure 500,400,404 {object} models.MessageResponse
 // @Router /api/record/{id} [get]
 func GetById(ctx *gin.Context) {
 	ctx, err := handler.GetUserContext(ctx)
@@ -63,9 +63,9 @@ func GetById(ctx *gin.Context) {
 // @Tags API
 // @Accept json
 // @Produce json
-// @Param input body domain.Records true "record info"
+// @Param input body schemas.Records true "record info"
 // @Success 200 {integer} integer 200
-// @Failure 500,400,404 {object} domain.MessageResponse
+// @Failure 500,400,404 {object} models.MessageResponse
 // @Router /api/new/record [post]
 func Create(ctx *gin.Context) {
 	var input schemas.Records
@@ -93,9 +93,9 @@ func Create(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path integer true "Record ID"
-// @Param input body domain.Records true "record info"
+// @Param input body schemas.Records true "record info"
 // @Success 200 {integer} integer 200
-// @Failure 500,400,404 {object} domain.MessageResponse
+// @Failure 500,400,404 {object} models.MessageResponse
 // @Router /api/record/{id} [put]
 func Update(ctx *gin.Context) {
 	var record schemas.Records
@@ -122,7 +122,7 @@ func Update(ctx *gin.Context) {
 // @Produce json
 // @Param id path integer true "Record ID"
 // @Success 200 {integer} integer 200
-// @Failure 500,400,404 {object} domain.MessageResponse
+// @Failure 500,400,404 {object} models.MessageResponse
 // @Router /api/record/{id} [delete]
 func Delete(ctx *gin.Context) {
 	ctx, err := handler.GetUserContext(ctx)
