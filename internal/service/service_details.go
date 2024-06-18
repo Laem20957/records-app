@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"records-app/internal/adapters/database"
@@ -22,6 +23,10 @@ func ServiceGetRecords(settings *settings.Settings, cache gcache.Cache, db datab
 }
 
 func (s *ServiceRecordDetails) GetAllRecords(ctx context.Context) ([]schemas.Records, error) {
+	if s == nil {
+		return nil, errors.New("runtime error:" +
+			"invalid memory address or nil pointer dereference")
+	}
 	return s.db.GetAllRecordsDB(ctx)
 }
 

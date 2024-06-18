@@ -19,11 +19,11 @@ import (
 // @Failure 500,400,404 {object} domain.MessageResponse
 // @Router /api/all/record [get]
 func GetAll(ctx *gin.Context) {
-	ctx, err := handler.GetAllContext(ctx)
-	if err != nil {
-		models.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
-		return
-	}
+	// ctx, err := handler.GetAllContext(ctx)
+	// if err != nil {
+	// 	models.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
+	// 	return
+	// }
 	records, err := handler.Handler{}.Services.IServiceRecordMethods.GetAllRecords(ctx)
 	if err != nil {
 		models.ServerResponse(ctx, http.StatusInternalServerError, err.Error())

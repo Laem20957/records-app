@@ -12,6 +12,8 @@ import (
 // @Version 1.0
 // @Description Server API
 // @Host localhost:8080
+// @license.name MIT License
+// @license.url  https://opensource.org/license/MIT
 // @SecurityDefinitions.apikey ApiKeyAuth
 // @In Header
 // @Name Authorization
@@ -22,8 +24,9 @@ func main() {
 	httpServer.NewHttpServer().HttpServerStart()
 	httpServer.NewHttpServer().HttpServerStop()
 
-	database, _ := database.ConnectDB()
-	defer database.Close()
+	database := database.ConnectionDB{}
+	database.ConnectDB()
+	database.CloseDB()
 
 	// var record domain.Records
 	// if err := database.Table("records_app.records").Where("id = ?", 1).First(&record).Error; err != nil {
