@@ -35,9 +35,10 @@ func (db *ConnectionDB) CloseDB() {
 	}
 }
 
-func NewConnectionDB(sets *settings.Settings) (IConnectionDB, error) {
-	strConn := fmt.Sprintf("host=%s port=%d dbname=%s user=%s password=%s sslmode=disable",
-		sets.DBHost, sets.DBPort, sets.DBName, sets.DBUsername, sets.DBPassword)
+func NewConnectionDB(settings *settings.Settings) (IConnectionDB, error) {
+	strConn := fmt.Sprintf("host=%s port=%d dbname=%s user=%s password=%s sslmode=%s",
+		settings.DBHost, settings.DBPort, settings.DBName,
+		settings.DBUsername, settings.DBPassword, settings.DBSSLMode)
 
 	db, err := gorm.Open("postgres", strConn)
 	if err != nil {

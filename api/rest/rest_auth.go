@@ -3,7 +3,6 @@ package rest
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	handler "records-app/api/rest/v1/handlers"
 	"records-app/internal/adapters/database/schemas"
@@ -87,14 +86,14 @@ func SignIn(ctx *gin.Context) {
 // @Failure 500,400,404 {object} models.MessageResponse
 // @Router /auth/refresh-token [get]
 func RefreshToken(ctx *gin.Context) {
-	cookie, err := ctx.Cookie("refresh-token")
-	if err != nil {
-		models.ServerResponse(ctx, http.StatusBadRequest, err.Error())
-		return
-	}
+	// cookie, err := ctx.Cookie("refresh-token")
+	// if err != nil {
+	// 	models.ServerResponse(ctx, http.StatusBadRequest, err.Error())
+	// 	return
+	// }
 
-	token := strings.ReplaceAll(cookie, "'", "")
-	refreshToken, err := handler.Handler{}.Services.IServiceAuthorizationMethods.RefreshToken(ctx, token)
+	// _ := strings.ReplaceAll(cookie, "'", "")
+	refreshToken, err := handler.Handler{}.Services.IServiceAuthorizationMethods.RefreshToken(ctx, 1)
 	if err != nil {
 		models.ServerResponse(ctx, http.StatusInternalServerError, err.Error())
 		return

@@ -9,6 +9,6 @@ type Handler struct {
 	Services *service.ServiceMethods
 }
 
-func GetHandler(service *service.ServiceMethods) *Handler {
-	return &Handler{service}
+func NewHandler(service *service.ServiceMethods) *Handler {
+	return &Handler{Services: service}
 }

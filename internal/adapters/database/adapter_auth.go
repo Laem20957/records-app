@@ -12,7 +12,7 @@ type DatabaseAuthORM struct {
 	DB *gorm.DB
 }
 
-func AdapterGetAuth(db *gorm.DB) *DatabaseAuthORM {
+func NewGetAdapterAuth(db *gorm.DB) *DatabaseAuthORM {
 	return &DatabaseAuthORM{DB: db}
 }
 

@@ -12,17 +12,17 @@ import (
 	"github.com/bluele/gcache"
 )
 
-type ServiceRecordDetails struct {
+type ServiceRecord struct {
 	settings *settings.Settings
 	cache    gcache.Cache
 	db       database.AdapterMethods
 }
 
-func ServiceGetRecords(settings *settings.Settings, cache gcache.Cache, db database.AdapterMethods) *ServiceRecordDetails {
-	return &ServiceRecordDetails{settings, cache, db}
+func NewGetServiceRecord(settings *settings.Settings, cache gcache.Cache, db database.AdapterMethods) *ServiceRecord {
+	return &ServiceRecord{settings, cache, db}
 }
 
-func (s *ServiceRecordDetails) GetAllRecords(ctx context.Context) ([]schemas.Records, error) {
+func (s *ServiceRecord) GetAllRecords(ctx context.Context) ([]schemas.Records, error) {
 	if s == nil {
 		return nil, errors.New("runtime error:" +
 			"invalid memory address or nil pointer dereference")
@@ -30,7 +30,7 @@ func (s *ServiceRecordDetails) GetAllRecords(ctx context.Context) ([]schemas.Rec
 	return s.db.GetAllRecordsDB(ctx)
 }
 
-func (s *ServiceRecordDetails) GetByIDRecords(ctx context.Context, recordId int) (schemas.Records, error) {
+func (s *ServiceRecord) GetByIDRecords(ctx context.Context, recordId int) (schemas.Records, error) {
 	record, err := s.cache.Get(fmt.Sprintf("%d", recordId))
 	if err == nil {
 		return record.(schemas.Records), nil
@@ -44,7 +44,7 @@ func (s *ServiceRecordDetails) GetByIDRecords(ctx context.Context, recordId int)
 	return record.(schemas.Records), nil
 }
 
-func (s *ServiceRecordDetails) CreateRecords(ctx context.Context) (int, error) {
+func (s *ServiceRecord) CreateRecords(ctx context.Context) (int, error) {
 	recordId, err := s.db.CreateRecordsDB(ctx)
 	if err != nil {
 		return 0, err
@@ -53,8 +53,8 @@ func (s *ServiceRecordDetails) CreateRecords(ctx context.Context) (int, error) {
 	return recordId, nil
 }
 
-func (s *ServiceRecordDetails) UpdateRecords(ctx context.Context, newId int,
-	newTitle string, newDescription string) (schemas.Records, error) {
+func (s *ServiceRecord) UpdateRecords(ctx context.Context, newId int,
+	newTitle, newDescription string) (schemas.Records, error) {
 	// if !newId.IsValid() {
 	// 	return errors.New("update structure has no values")
 	// }
@@ -62,6 +62,6 @@ func (s *ServiceRecordDetails) UpdateRecords(ctx context.Context, newId int,
 	return s.db.UpdateRecordsDB(ctx, newId, newTitle, newDescription)
 }
 
-func (s *ServiceRecordDetails) DeleteRecords(ctx context.Context, recordId int) (int, error) {
+func (s *ServiceRecord) DeleteRecords(ctx context.Context, recordId int) (int, error) {
 	return s.db.DeleteRecordsDB(ctx, recordId)
 }

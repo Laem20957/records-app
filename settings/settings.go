@@ -20,6 +20,7 @@ type Settings struct {
 	DBSchemaName    string        `mapstructure:"DB_SCHEMA_NAME"`
 	DBUsername      string        `mapstructure:"DB_USERNAME"`
 	DBPassword      string        `mapstructure:"DB_PASSWORD"`
+	DBSSLMode       string        `mapstructure:"DB_SSL_MODE"`
 	TTL             time.Duration `mapstructure:"TTL"`
 	TTLToken        time.Duration `mapstructure:"TTL_TOKEN"`
 	TTLRefreshToken time.Duration `mapstructure:"TTL_REFRESH_TOKEN"`

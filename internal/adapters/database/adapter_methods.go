@@ -19,7 +19,7 @@ type IAdapterRecordMethods interface {
 	GetAllRecordsDB(ctx context.Context) ([]schemas.Records, error)
 	GetByIDRecordsDB(ctx context.Context, recordId int) (schemas.Records, error)
 	CreateRecordsDB(ctx context.Context) (int, error)
-	UpdateRecordsDB(ctx context.Context, newId int, newTitle string, newDescription string) (schemas.Records, error)
+	UpdateRecordsDB(ctx context.Context, newId int, newTitle, newDescription string) (schemas.Records, error)
 	DeleteRecordsDB(ctx context.Context, recordId int) (int, error)
 }
 
@@ -30,7 +30,7 @@ type AdapterMethods struct {
 
 func AdapterGetMethods(db *gorm.DB) *AdapterMethods {
 	return &AdapterMethods{
-		IAdapterAuthorizationMethods: AdapterGetAuth(db),
-		IAdapterRecordMethods:        AdapterGetRecord(db),
+		IAdapterAuthorizationMethods: NewGetAdapterAuth(db),
+		IAdapterRecordMethods:        NewGetAdapterRecord(db),
 	}
 }

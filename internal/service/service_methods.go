@@ -15,7 +15,7 @@ type IServiceAuthorizationMethods interface {
 	SignIn(ctx context.Context, input schemas.Users) (string, string, error)
 	GenerateToken(ctx context.Context, userId int) (string, string, error)
 	TokenIsSigned(token string) (int, error)
-	RefreshToken(ctx context.Context, refreshToken string) (string, error)
+	RefreshToken(ctx context.Context, tokenId int) (string, error)
 }
 
 type IServiceRecordMethods interface {
@@ -31,9 +31,11 @@ type ServiceMethods struct {
 	IServiceRecordMethods
 }
 
-func ServiceGetMethods(settings *settings.Settings, cache gcache.Cache, db *database.AdapterMethods) *ServiceMethods {
+func ServiceGetMethods(settings *settings.Settings, cache *gcache.Cache, db *database.AdapterMethods) *ServiceMethods {
 	return &ServiceMethods{
-		IServiceAuthorizationMethods: nil, // ServiceGetAuth(settings, db.IAdapterAuthorizationMethods.(db.AdapterMethods)),
-		IServiceRecordMethods:        ServiceGetRecords(settings, cache, db.IAdapterRecordMethods.(database.AdapterMethods)),
+		IServiceAuthorizationMethods: NewGetServiceAuth(settings, db.IAdapterAuthorizationMethods.(database.AdapterMethods)),
+		IServiceRecordMethods:        NewGetServiceRecord(settings, *cache, db.IAdapterRecordMethods.(database.AdapterMethods)),
 	}
 }
+
+//! Добавил указатель cache *gcache.Cache и *cache

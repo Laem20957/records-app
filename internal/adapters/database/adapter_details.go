@@ -13,7 +13,7 @@ type DatabaseRecordORM struct {
 	DB *gorm.DB
 }
 
-func AdapterGetRecord(db *gorm.DB) *DatabaseRecordORM {
+func NewGetAdapterRecord(db *gorm.DB) *DatabaseRecordORM {
 	return &DatabaseRecordORM{DB: db}
 }
 
