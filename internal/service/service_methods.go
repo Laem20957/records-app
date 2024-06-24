@@ -22,7 +22,7 @@ type IServiceRecordMethods interface {
 	GetAllRecords(ctx context.Context) ([]schemas.Records, error)
 	GetByIDRecords(ctx context.Context, recordId int) (schemas.Records, error)
 	CreateRecords(ctx context.Context) (int, error)
-	UpdateRecords(ctx context.Context, newId int, newTitle string, newDescription string) (schemas.Records, error)
+	UpdateRecords(ctx context.Context, newId int, newTitle, newDescription string) (schemas.Records, error)
 	DeleteRecords(ctx context.Context, recordId int) (int, error)
 }
 
@@ -31,10 +31,10 @@ type ServiceMethods struct {
 	IServiceRecordMethods
 }
 
-func ServiceGetMethods(settings *settings.Settings, cache *gcache.Cache, db *database.AdapterMethods) *ServiceMethods {
+func GetServiceMethods(settings *settings.Settings, cache gcache.Cache, db *database.AdapterMethods) *ServiceMethods {
 	return &ServiceMethods{
 		IServiceAuthorizationMethods: NewGetServiceAuth(settings, db.IAdapterAuthorizationMethods.(database.AdapterMethods)),
-		IServiceRecordMethods:        NewGetServiceRecord(settings, *cache, db.IAdapterRecordMethods.(database.AdapterMethods)),
+		IServiceRecordMethods:        NewGetServiceRecord(settings, cache, db.IAdapterRecordMethods.(database.AdapterMethods)),
 	}
 }
 

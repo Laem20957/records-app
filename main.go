@@ -5,7 +5,7 @@ import (
 	"records-app/internal/adapters/database"
 	"records-app/settings"
 
-	_ "github.com/lib/pq"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 // @Title Records-App
@@ -18,6 +18,7 @@ import (
 // @In Header
 // @Name Authorization
 func main() {
+	// var cache gcache.Cache
 	settings.GetSettings()
 
 	httpServer := rest.HttpServer{}
@@ -26,6 +27,11 @@ func main() {
 
 	database := database.ConnectionDB{}
 	database.ConnectDB()
+
+	// adapter := db.GetAdapterMethods(&gorm.DB{})
+	// service := service.GetServiceMethods(settings, cache, adapter)
+	// handler.NewHandler(service)
+
 	database.CloseDB()
 
 	// var record domain.Records

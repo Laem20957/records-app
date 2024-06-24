@@ -28,7 +28,7 @@ type AdapterMethods struct {
 	IAdapterRecordMethods
 }
 
-func AdapterGetMethods(db *gorm.DB) *AdapterMethods {
+func GetAdapterMethods(db *gorm.DB) *AdapterMethods {
 	return &AdapterMethods{
 		IAdapterAuthorizationMethods: NewGetAdapterAuth(db),
 		IAdapterRecordMethods:        NewGetAdapterRecord(db),

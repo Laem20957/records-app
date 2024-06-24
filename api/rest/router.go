@@ -28,8 +28,8 @@ func InitRoutes() *gin.Engine {
 		api.GET("/all/record", GetAll)
 		api.GET("/record/id", GetById)
 		api.POST("/new/record", Create)
-		api.PUT("/:id", Update)
-		api.DELETE("/:id", Delete)
+		api.PUT("/update/id", Update)
+		api.DELETE("/delete/id", Delete)
 	}
 	return router
 }

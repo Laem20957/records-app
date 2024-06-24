@@ -96,7 +96,7 @@ func Create(ctx *gin.Context) {
 // @Param input body schemas.Records true "record info"
 // @Success 200 {integer} integer 200
 // @Failure 500,400,404 {object} models.MessageResponse
-// @Router /api/record/{id} [put]
+// @Router /api/update/{id} [put]
 func Update(ctx *gin.Context) {
 	var record schemas.Records
 	ctx, err := handler.GetUserContext(ctx)
@@ -123,7 +123,7 @@ func Update(ctx *gin.Context) {
 // @Param id path integer true "Record ID"
 // @Success 200 {integer} integer 200
 // @Failure 500,400,404 {object} models.MessageResponse
-// @Router /api/record/{id} [delete]
+// @Router /api/delete/{id} [delete]
 func Delete(ctx *gin.Context) {
 	ctx, err := handler.GetUserContext(ctx)
 	if err != nil {

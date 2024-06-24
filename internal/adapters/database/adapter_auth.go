@@ -28,7 +28,7 @@ func (d *DatabaseAuthORM) GetUserDB(ctx context.Context, userId int) (schemas.Us
 func (d *DatabaseAuthORM) GetTokenDB(ctx context.Context, tokenId int) (schemas.Tokens, error) {
 	var token schemas.Tokens
 
-	if err := d.DB.Table(fmt.Sprintf("records_app.%s", refreshTokensTable)).Where("id = ?", tokenId).First(&token).Error; err != nil {
+	if err := d.DB.Table(fmt.Sprintf("records_app.%s", tokensTable)).Where("id = ?", tokenId).First(&token).Error; err != nil {
 		logs.Error(err)
 	}
 	return token, nil
@@ -46,7 +46,7 @@ func (d *DatabaseAuthORM) CreateUserDB(ctx context.Context) (int, error) {
 func (d *DatabaseAuthORM) CreateTokenDB(ctx context.Context) (int, error) {
 	var token schemas.Tokens
 
-	if err := d.DB.Table(fmt.Sprintf("records_app.%s", refreshTokensTable)).Create(&token).Error; err != nil {
+	if err := d.DB.Table(fmt.Sprintf("records_app.%s", tokensTable)).Create(&token).Error; err != nil {
 		logs.Error(err)
 	}
 	return token.ID, nil

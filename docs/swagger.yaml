@@ -81,6 +81,38 @@ paths:
       summary: Get all records
       tags:
       - API
+  /api/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Record ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.MessageResponse'
+      summary: Delete record by id
+      tags:
+      - API
   /api/new/record:
     post:
       consumes:
@@ -115,37 +147,6 @@ paths:
       tags:
       - API
   /api/record/{id}:
-    delete:
-      consumes:
-      - application/json
-      parameters:
-      - description: Record ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: integer
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/models.MessageResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/models.MessageResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/models.MessageResponse'
-      summary: Delete record by id
-      tags:
-      - API
     get:
       consumes:
       - application/json
@@ -177,6 +178,7 @@ paths:
       summary: Get record by id
       tags:
       - API
+  /api/update/{id}:
     put:
       consumes:
       - application/json

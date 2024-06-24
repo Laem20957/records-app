@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	_ "records-app/docs"
 	"records-app/internal/service"
+	_ "records-app/docs"
 )
 
 type Handler struct {
